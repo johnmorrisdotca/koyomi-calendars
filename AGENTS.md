@@ -1,0 +1,56 @@
+# Agents: start here
+
+<!--
+Template: kazoku-ui templates/AGENTS.md. Copy it to AGENTS.md at the repo root and fill in the Facts table below the marker.
+Everything above the marker is the same in every package repo: change it here, then copy it over, never by hand in one repo.
+Everything below the marker belongs to the repo. Public repo: no private hosts, addresses, home paths, logins or keys.
+-->
+
+This repo is one of the family of John Morris's npm packages. The rules every package repo shares are below; what differs is in the **Facts** table under the marker.
+
+## Read first
+
+1. spx-stats `docs/package-work.md` (https://github.com/spxis/spx-stats/blob/main/docs/package-work.md), and the section "Who may change what" in spx-stats `AGENTS.md`. They hold the boards, filing, checks, release, hand-off and reporting rules. If your session has an spx-stats checkout, `git pull` it first.
+2. This repo's `CONTRIBUTING.md` and README, for the rules and commands of the code itself.
+3. The Facts table below: your board, ports, checks, release path and hand-off project.
+
+## Work
+
+- **Board.** Every ticket for this repo is on the board named in Facts, titled `<title prefix>: ...` with `--area <title prefix>`. From the spx-stats checkout's `web/` directory: `pnpm task --board <board> list`, then `claim <id> "<who>"` with the whole id before you start. Read the ticket's full detail first. Anything you find outside your ticket becomes a new ticket; say so in your report. Never run `done`: the coordinating session closes tickets.
+- **A gap in a shared part** (the view controls, theme switch, language picker, address state, save-as-image) is a `kazoku-ui:` ticket on the `kazoku-ui` board, not a copy or a workaround here.
+- **One agent per repo**, in a new git worktree from `origin/main`. Never work in the main checkout or in another agent's worktree.
+- **Ports.** Only the block in Facts. Check `lsof -iTCP:<port> -sTCP:LISTEN` first, stop only your own process by its PID, never `pkill`.
+- **Commits.** As John Morris <john@johnmorris.ca>, Conventional Commits, subject 50 characters or less, no AI attribution, files added by name (never `git add -A`). Push fast-forward to `main` after `git fetch` and a rebase.
+- **Never.** GitHub issues, pull requests, discussions or comments; a token, key or private address in any file, commit or ticket; John's SPX, SPXN or SPXIS marks in an MIT package; anything that bills; a new package name, first publish, major version, deprecation or licence change without John's yes.
+- **Japanese.** Whatever you write for John, give the English beside it. A docs page is in one language.
+
+## Checks, release, hand-off
+
+- **Before every push** run the checks in Facts. Green locally, then green in CI after the push (`gh run watch`).
+- **Release.** Make a release commit (bump `package.json`, move the CHANGELOG's Unreleased block under the version), push it, wait for CI. **Do not tag and do not publish.** John runs the Release workflow (Actions → Release → Run workflow, from `main`). It checks the tag against `package.json`, runs the repo's check script, skips a version already on npm, tags `v<version>`, and publishes by trusted publishing. The repo's `release.yml` should call kazoku-ui's `reusable-release.yml` (kazoku-ui `docs/release-workflow.md`); the trusted-publisher entry on npmjs.com names `release.yml`.
+- **Hand-off** for every finished ticket: write `<ticket-id>.json` and run `SPX_HANDOFF_PROJECT=<hand-off project> python3 -I scripts/handoff/handoff.py check|write <file>` from the spx-stats checkout (the variable on the same command line; the id is the ticket's whole id). Read the replies at the start and before you finish. Then release your hold: `pnpm task --board <board> release <id> --by "<who>"`.
+- **Report** in under 12 lines, first line `<your name>, ticket <id> (<title>)` (`subagent of <name>` for a subagent): what changed, shas, CI, anything John must decide, new tickets, and last `HAND-OFF WRITTEN: <path>`. If you stop for any reason, say so at once.
+
+<!-- repo-specific: everything below this line belongs to this repo. A template update never touches it. -->
+
+## Facts
+
+| | |
+|---|---|
+| Package | `@johnmorrisdotca/koyomi-calendars` |
+| Repo | `johnmorrisdotca/koyomi-calendars` |
+| Board | `modules` |
+| Title prefix and `--area` | `koyomi-calendars` |
+| Ports | 8000 to 8099: 8000 the demo and dev, 8001 the tests, 8002 the picture script, 8003 and up anything else |
+| Checks before a push | `pnpm check`, `pnpm test:readme`, `pnpm test:demo` |
+| Release | `release.yml` → `reusable-release.yml`; trusted publisher entry: `release.yml` |
+| Hand-off project | `koyomi-calendars` |
+
+## This repo
+
+Calendar things as SVG: today the calendar-page icons (18 designs), the whole-month pages and the page turning; more calendar things will be added here, each its own import so the small icon stays small.
+
+- The first 17 designs came from meigen-sports 0.19.2 and are held byte-identical by `test/identical.test.ts`. Do not change their output without changing the golden file on purpose and saying so in the changelog.
+- A design is its own file under `src/themes/` and imports only the shared kit (`kit.ts`, `tear.ts` for tear-off pages). `scripts/check-bytes.ts` holds the size of each import to a budget.
+- `scripts/family-template.mjs` is the family's shared file with one addition: this package's row in the list. That addition is for the family sweep to adopt; until then the hash in `test/family.test.ts` is of this copy.
+- No holiday data of any country other than what `src/japanese.ts` computes. A month page takes its notes from the caller.

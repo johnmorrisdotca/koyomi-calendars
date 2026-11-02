@@ -1,0 +1,197 @@
+{
+  "name": "@johnmorrisdotca/koyomi-calendars",
+  "version": "0.1.0",
+  "description": "Koyomi 暦: calendar-page icons as SVG, 18 original designs in light and dark, in any language through Intl. No image, no font, no dependency; import one design alone for a few kilobytes.",
+  "keywords": [
+    "calendar",
+    "calendar-icon",
+    "date-icon",
+    "icons",
+    "svg",
+    "svg-icons",
+    "dark-mode",
+    "intl",
+    "localization",
+    "japanese",
+    "typescript",
+    "zero-dependencies",
+    "tree-shakable",
+    "itsutsu"
+  ],
+  "homepage": "https://johnmorrisdotca.github.io/koyomi-calendars/",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/johnmorrisdotca/koyomi-calendars.git"
+  },
+  "bugs": {
+    "url": "https://github.com/johnmorrisdotca/koyomi-calendars/issues"
+  },
+  "author": "John Morris",
+  "license": "MIT",
+  "type": "module",
+  "sideEffects": false,
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
+    },
+    "./japanese": {
+      "types": "./dist/japanese.d.ts",
+      "import": "./dist/japanese.js",
+      "default": "./dist/japanese.js"
+    },
+    "./names": {
+      "types": "./dist/names.d.ts",
+      "import": "./dist/names.js",
+      "default": "./dist/names.js"
+    },
+    "./month": {
+      "types": "./dist/month.d.ts",
+      "import": "./dist/month.js",
+      "default": "./dist/month.js"
+    },
+    "./animate": {
+      "types": "./dist/animate.d.ts",
+      "import": "./dist/animate.js",
+      "default": "./dist/animate.js"
+    },
+    "./themes/pins": {
+      "types": "./dist/themes/pins.d.ts",
+      "import": "./dist/themes/pins.js",
+      "default": "./dist/themes/pins.js"
+    },
+    "./themes/loops": {
+      "types": "./dist/themes/loops.d.ts",
+      "import": "./dist/themes/loops.js",
+      "default": "./dist/themes/loops.js"
+    },
+    "./themes/shadow": {
+      "types": "./dist/themes/shadow.d.ts",
+      "import": "./dist/themes/shadow.js",
+      "default": "./dist/themes/shadow.js"
+    },
+    "./themes/heavy": {
+      "types": "./dist/themes/heavy.d.ts",
+      "import": "./dist/themes/heavy.js",
+      "default": "./dist/themes/heavy.js"
+    },
+    "./themes/cartoon": {
+      "types": "./dist/themes/cartoon.d.ts",
+      "import": "./dist/themes/cartoon.js",
+      "default": "./dist/themes/cartoon.js"
+    },
+    "./themes/flip": {
+      "types": "./dist/themes/flip.d.ts",
+      "import": "./dist/themes/flip.js",
+      "default": "./dist/themes/flip.js"
+    },
+    "./themes/stack": {
+      "types": "./dist/themes/stack.d.ts",
+      "import": "./dist/themes/stack.js",
+      "default": "./dist/themes/stack.js"
+    },
+    "./themes/line": {
+      "types": "./dist/themes/line.d.ts",
+      "import": "./dist/themes/line.js",
+      "default": "./dist/themes/line.js"
+    },
+    "./themes/curl": {
+      "types": "./dist/themes/curl.d.ts",
+      "import": "./dist/themes/curl.js",
+      "default": "./dist/themes/curl.js"
+    },
+    "./themes/soft": {
+      "types": "./dist/themes/soft.d.ts",
+      "import": "./dist/themes/soft.js",
+      "default": "./dist/themes/soft.js"
+    },
+    "./themes/desk": {
+      "types": "./dist/themes/desk.d.ts",
+      "import": "./dist/themes/desk.js",
+      "default": "./dist/themes/desk.js"
+    },
+    "./themes/thin": {
+      "types": "./dist/themes/thin.d.ts",
+      "import": "./dist/themes/thin.js",
+      "default": "./dist/themes/thin.js"
+    },
+    "./themes/frame": {
+      "types": "./dist/themes/frame.d.ts",
+      "import": "./dist/themes/frame.js",
+      "default": "./dist/themes/frame.js"
+    },
+    "./themes/badge": {
+      "types": "./dist/themes/badge.d.ts",
+      "import": "./dist/themes/badge.js",
+      "default": "./dist/themes/badge.js"
+    },
+    "./themes/sun": {
+      "types": "./dist/themes/sun.d.ts",
+      "import": "./dist/themes/sun.js",
+      "default": "./dist/themes/sun.js"
+    },
+    "./themes/roll": {
+      "types": "./dist/themes/roll.d.ts",
+      "import": "./dist/themes/roll.js",
+      "default": "./dist/themes/roll.js"
+    },
+    "./themes/squircle": {
+      "types": "./dist/themes/squircle.d.ts",
+      "import": "./dist/themes/squircle.js",
+      "default": "./dist/themes/squircle.js"
+    },
+    "./themes/plain": {
+      "types": "./dist/themes/plain.d.ts",
+      "import": "./dist/themes/plain.js",
+      "default": "./dist/themes/plain.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist",
+    "LICENSE",
+    "NOTICE.md",
+    "CHANGELOG.md",
+    "README.md"
+  ],
+  "engines": {
+    "node": ">=22"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "packageManager": "pnpm@10.11.0",
+  "scripts": {
+    "build": "node -e \"require('node:fs').rmSync('dist', { recursive: true, force: true })\" && tsc -p tsconfig.json",
+    "lint": "eslint .",
+    "typecheck": "tsc -p tsconfig.check.json && tsc -p tsconfig.tools.json && tsc -p tsconfig.demo.json",
+    "test": "node --test test/*.test.ts",
+    "check": "pnpm lint && pnpm typecheck && pnpm test && pnpm build && node scripts/check-package.ts && node scripts/check-bytes.ts",
+    "test:package": "pnpm build && node scripts/check-package.ts",
+    "test:readme": "pnpm build && node scripts/check-readme-examples.ts",
+    "prepublishOnly": "pnpm check",
+    "site": "pnpm build && node scripts/site.ts",
+    "dev": "pnpm site && node scripts/dev.ts",
+    "test:demo": "pnpm site && playwright test",
+    "images": "pnpm site && node scripts/images.ts"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.0.0",
+    "@johnmorrisdotca/kazoku-ui": "^0.9.0",
+    "@playwright/test": "1.64.0",
+    "@types/node": "^24.0.0",
+    "esbuild": "^0.25.0",
+    "eslint": "^9.0.0",
+    "typescript": "^5.9.0",
+    "typescript-eslint": "^8.0.0"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "esbuild"
+    ]
+  }
+}
