@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="{{lang}}"><head><!--family:head--><link rel="stylesheet" href="{{root}}family.css"><link rel="stylesheet" href="{{root}}koyomi.css"></head>
+<body><main><!--family:header-->
+<section class="stage-panel" aria-labelledby="heading">
+  <h2 id="heading" data-say="heading">{{heading}}</h2>
+  <p data-say="intro">{{intro}}</p>
+  <div class="stage-grid">
+    <div class="stage-box"><div id="stage" class="stage" data-testid="stage" aria-live="polite"></div></div>
+    <div class="controls">
+      <div class="fam-row"><span class="fam-label" data-say="date">{{date}}</span><input id="date" class="fam-field" type="date" aria-label="{{date}}"></div>
+      <div class="fam-row fam-actions"><button type="button" id="prev" class="fam-button" data-testid="prev" data-say="prev">{{prev}}</button><button type="button" id="next" class="fam-button" data-primary="true" data-testid="next" data-say="next">{{next}}</button></div>
+      <div class="fam-row"><span class="fam-label" data-say="flip">{{flip}}</span><span class="fam-seg" id="seg-flip" role="group" aria-label="{{flip}}"></span></div>
+      <div class="fam-row"><span class="fam-label" data-say="preset">{{preset}}</span><span class="fam-seg" id="seg-preset" role="group" aria-label="{{preset}}"></span></div>
+      <div class="fam-row"><span class="fam-label" data-say="housing">{{housing}}</span><span class="fam-seg" id="seg-housing" role="group" aria-label="{{housing}}"></span></div>
+      <div class="fam-row"><span class="fam-label" data-say="rings">{{rings}}</span><span class="fam-seg" id="seg-rings" role="group" aria-label="{{rings}}"></span></div>
+      <div class="fam-row"><span class="fam-label" data-say="turn">{{turn}}</span><span class="fam-seg" id="seg-turn" role="group" aria-label="{{turn}}"></span></div>
+      <p class="fam-fine" data-say="stageNote">{{stageNote}}</p>
+    </div>
+  </div>
+</section>
+<section class="more" aria-labelledby="gallery-heading">
+  <h2 id="gallery-heading" data-say="galleryHeading">{{galleryHeading}}</h2>
+  <p data-say="galleryIntro">{{galleryIntro}}</p>
+  <div id="gallery" class="gallery" data-testid="gallery"></div>
+</section>
+<section class="more" aria-labelledby="code-heading">
+  <h2 id="code-heading" data-say="codeHeading">{{codeHeading}}</h2>
+  <div class="code-grid">
+    <div><div class="fam-row code-head"><span class="fam-label" data-say="drawCode">{{drawCode}}</span><button type="button" class="fam-button" data-copy="draw" data-say="copy">{{copy}}</button></div><pre><code id="code-draw"></code></pre></div>
+    <div><div class="fam-row code-head"><span class="fam-label" data-say="turnCode">{{turnCode}}</span><button type="button" class="fam-button" data-copy="turn" data-say="copy">{{copy}}</button></div><pre><code id="code-turn"></code></pre></div>
+  </div>
+</section>
+<section class="more" aria-labelledby="month-heading">
+  <h2 id="month-heading" data-say="monthHeading">{{monthHeading}}</h2>
+  <p data-say="monthIntro">{{monthIntro}}</p>
+  <div class="fam-row"><span class="fam-label" data-say="weekStart">{{weekStart}}</span><span class="fam-seg" id="seg-week" role="group" aria-label="{{weekStart}}"></span><span class="fam-label" data-say="notes">{{notes}}</span><span class="fam-seg" id="seg-notes" role="group" aria-label="{{notes}}"></span></div>
+  <div id="months" class="months" data-testid="months"></div>
+</section>
+<section class="more" aria-labelledby="size-heading">
+  <h2 id="size-heading" data-say="sizeHeading">{{sizeHeading}}</h2>
+  <p data-say="sizeIntro">{{sizeIntro}}</p>
+  <div class="fam-table-box"><table><thead><tr><th>{{sizeImport}}</th><th data-number="true">{{sizeMin}}</th><th data-number="true">{{sizeGzip}}</th></tr></thead><tbody>{{sizeRows}}</tbody></table></div>
+</section>
+<!--family:footer--></main><!--family:scripts--></body></html>
