@@ -4,6 +4,13 @@
 
 - The README opens with the package's thumbnail, and the demo carries it as its link preview (og:image) and publishes the card, a dark card and an icon on Pages at `thumbnail.png`, `thumbnail-dark.png` and `icon.png`.
 
+### Documentation
+
+- **Thirteen guides, each with a Japanese page, and a generated API reference.** `docs/guides/` has getting started, icons and designs, housing rings and turn, month pages, turning the page, the Japanese calendar, languages and locales, sizes and bundles, frameworks and servers, accessibility and theming, architecture, troubleshooting and upgrading; each has its Japanese page of the same name in `docs/guides/ja/`. `docs/API.md` is written from the built declarations (`pnpm docs:api`). The README is rewritten into sections around the same material.
+- **Every example runs, and the documentation is checked.** `pnpm test:readme` now also runs the examples of the guides; `pnpm docs:check` fails when `docs/API.md` is out of date, a guide has no Japanese page or a different set of code blocks, a link or picture is missing, or an export is named nowhere. Both run in `.github/workflows/docs.yml`. `test/docs-language.test.ts` holds the guides' Japanese pages to the same one-language rule as the older pages.
+- **Ten more pictures** in `docs/images/` (the looks, the months in dark and in Japanese, each month design, the tear-off pages, the weekend page and the sizes), made by `pnpm images`.
+- New demo page: `demo/builder.html`, to choose an icon or a month and copy the code, in English and in Japanese.
+
 ## [0.1.1] - 2026-11-03
 
 ### Fixed

@@ -1,4 +1,4 @@
-// Runs the examples of the README and of every page of docs/ (`pnpm test:readme`, after a build). Every fenced `js` block is
+// Runs the examples of the README, of every page of docs/ and of every guide in docs/guides/ (`pnpm test:readme`, after a build). Every fenced `js` block is
 // written to its own file under .readme-examples/, which imports the package by its name exactly as a reader would (the package
 // names itself through its `exports`, so this is the built package in this checkout), and run. A block's `console.log(x); // 4`
 // says what it prints, and the comment lines that end a block say what the block printed: both are compared with the output.
@@ -17,6 +17,8 @@ mkdirSync(work, { recursive: true });
 
 const pages: Array<[string, string]> = [["README.md", readFileSync(join(root, "README.md"), "utf8")]];
 for (const name of readdirSync(join(root, "docs")).filter((n) => n.endsWith(".md"))) pages.push([`docs/${name}`, readFileSync(join(root, "docs", name), "utf8")]);
+// The guides, in English: their Japanese twins (docs/guides/ja) hold the same code, which `pnpm docs:check` compares block for block.
+for (const name of readdirSync(join(root, "docs", "guides")).filter((n) => n.endsWith(".md"))) pages.push([`docs/guides/${name}`, readFileSync(join(root, "docs", "guides", name), "utf8")]);
 
 let failed = 0;
 let ran = 0;

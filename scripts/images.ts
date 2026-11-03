@@ -44,6 +44,26 @@ try {
     }
     const notes = { "11-07": "Dentist 14:00", "11-12": "Groceries and meal prep", "11-19": "Vet 16:00", "11-26": "Birthday" };
     await sheet(`<div style="width:1300px;background:#e8e2d4;padding:14px;display:flex;gap:14px;align-items:flex-start">${(["poster", "board", "wall", "desk"] as const).map((d) => monthCalendar({ year: 2026, month: 11, design: d, size: d === "desk" ? 420 : 280, notes })).join("")}</div>`, "months.png", 1300);
+    // The rest of the pictures of the guides: the presets, the months in dark and in Japanese, each month design alone, the tear-off pages, the weekend page and the sizes.
+    const light = { bg: "#f4efe4", card: "#fbf8f1", fg: "#1f2320" };
+    const dark = { bg: "#1b1d1b", card: "#232623", fg: "#ece8dc" };
+    const looksRow = (theme: "badge" | "squircle", scheme: "light" | "dark") => {
+      const c = scheme === "light" ? light : dark;
+      return `<div style="display:grid;grid-template-columns:repeat(5,1fr);gap:10px;background:${c.bg};padding:10px">${looks.map(([name, o]) => tile(calendarIcon({ theme, ...date, scheme, size: 130, ...o }), name, c.card, c.fg)).join("")}</div>`;
+    };
+    await sheet(`<div style="width:820px">${looksRow("badge", "light")}${looksRow("badge", "dark")}</div>`, "looks.png", 820);
+    const designs = ["poster", "board", "wall", "desk"] as const;
+    const monthRow = (scheme: "light" | "dark", extra: Record<string, unknown> = {}) => `<div style="width:1300px;background:${scheme === "light" ? "#e8e2d4" : "#171917"};padding:14px;display:flex;gap:14px;align-items:flex-start">${designs.map((d) => monthCalendar({ year: 2026, month: 11, design: d, scheme, size: d === "desk" ? 420 : 280, notes, ...extra })).join("")}</div>`;
+    await sheet(monthRow("dark"), "months-dark.png", 1300);
+    await sheet(monthRow("light", { locale: "ja" }), "months-ja.png", 1300);
+    for (const d of designs) await sheet(`<div style="width:560px;background:#e8e2d4;padding:14px;display:flex;justify-content:center">${monthCalendar({ year: 2026, month: 11, design: d, size: 520, notes })}</div>`, `month-${d}.png`, 560);
+    const day = { month: 11, day: 3, year: 2026 };
+    const tearOff = (["sun", "roll", "plain"] as const).map((t) => tile(calendarIcon({ theme: t, ...day, scheme: "light", size: 230, locale: "ja", japanese: true }), `${t}, locale ja, japanese: true`, light.card, light.fg)).join("");
+    await sheet(`<div style="width:860px;display:grid;grid-template-columns:repeat(3,1fr);gap:10px;background:${light.bg};padding:10px">${tearOff}</div>`, "japanese-pages.png", 860);
+    const weekend = (["sun", "roll"] as const).flatMap((t) => [tile(calendarIcon({ theme: t, month: 11, day: 7, year: 2026, scheme: "light", size: 230, weekend: "split" }), `${t}, Saturday 7 November`, light.card, light.fg), tile(calendarIcon({ theme: t, month: 11, day: 9, year: 2026, scheme: "light", size: 230, weekend: "split" }), `${t}, Monday 9 November`, light.card, light.fg)]).join("");
+    await sheet(`<div style="width:1000px;display:grid;grid-template-columns:repeat(4,1fr);gap:10px;background:${light.bg};padding:10px">${weekend}</div>`, "weekend-split.png", 1000);
+    const sizes = [16, 32, 64, 128, 256].map((size) => tile(calendarIcon({ theme: "squircle", ...date, scheme: "light", size }), `size ${size}`, light.card, light.fg)).join("");
+    await sheet(`<div style="width:760px;display:flex;gap:10px;align-items:flex-end;background:${light.bg};padding:10px">${sizes}</div>`, "sizes.png", 760);
     // Each way of turning the page, as frames in time, forwards and then backwards. The animation is paused at each moment and the frame is taken.
     const fractions = [0, 0.2, 0.4, 0.55, 0.75, 1];
     const flipPage = await browser.newPage({ viewport: { width: 1280, height: 700 }, deviceScaleFactor: 2, reducedMotion: "no-preference" });

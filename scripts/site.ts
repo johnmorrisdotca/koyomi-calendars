@@ -5,7 +5,7 @@ import { build } from "esbuild";
 import { costs } from "./check-bytes.ts";
 import { docPages } from "./docs-site.ts";
 import { publishThumbnails, thumbnailHead } from "./family-thumbnail.mjs";
-import { renderDemo, renderDoc } from "./page.ts";
+import { renderBuilder, renderDemo, renderDoc } from "./page.ts";
 
 /** What the family's card shows (scripts/images.ts makes it): the words of og:image:alt and of the README's top picture. */
 const ALT = "Koyomi Calendars: five designs of a calendar-page icon for 17 July 2026 in a row, the squircle design largest in the middle.";
@@ -20,6 +20,8 @@ const pkg = JSON.parse(readFileSync("package.json", "utf8"));
 const withCard = (html: string) => html.replace("</head>", `${thumbnailHead(pkg, { alt: ALT })}</head>`);
 writeFileSync("site/index.html", withCard(renderDemo("en", rowsOf("en"))));
 writeFileSync("site/ja/index.html", withCard(renderDemo("ja", rowsOf("ja"))));
+writeFileSync("site/builder.html", withCard(renderBuilder("en")));
+writeFileSync("site/ja/builder.html", withCard(renderBuilder("ja")));
 publishThumbnails(".", "site");
 for (const [name, lang, text] of docPages("docs")) writeFileSync(lang === "ja" ? `site/ja/docs/${name}.html` : `site/docs/${name}.html`, renderDoc(lang, name, text));
 for (const file of ["family.css", "koyomi.css"]) cpSync(`demo/${file}`, `site/${file}`);
@@ -27,6 +29,6 @@ cpSync("docs/images", "site/docs/images", { recursive: true });
 cpSync("docs/images", "site/ja/docs/images", { recursive: true });
 // The shared parts (a dev dependency, used only by the header): served beside the pages.
 cpSync("node_modules/@johnmorrisdotca/kazoku-ui/dist", "site/kazoku-ui", { recursive: true, dereference: true, filter: (from) => !/\.d\.ts$/.test(from) });
-await build({ entryPoints: { demo: "demo/demo.ts", animate: "src/animate.ts", koyomi: "src/index.ts", month: "src/month.ts" }, outdir: "site", bundle: true, format: "esm", target: "es2022", minify: true, legalComments: "none", logLevel: "warning" });
+await build({ entryPoints: { demo: "demo/demo.ts", builder: "demo/builder.ts", animate: "src/animate.ts", koyomi: "src/index.ts", month: "src/month.ts" }, outdir: "site", bundle: true, format: "esm", target: "es2022", minify: true, legalComments: "none", logLevel: "warning" });
 writeFileSync("site/.nojekyll", "");
 console.log("site/ is ready");

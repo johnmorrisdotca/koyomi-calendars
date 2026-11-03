@@ -52,8 +52,19 @@ export function renderDemo(lang: Lang, sizeRows: string): string {
   let body = readFileSync(new URL("../demo/index.html", import.meta.url), "utf8");
   body = body.slice(body.indexOf("<!--family:header-->") + "<!--family:header-->".length, body.indexOf("<!--family:footer-->"));
   body = body.replace("{{sizeRows}}", sizeRows).replace(/\{\{(\w+)\}\}/g, (whole, key: string) => (key in w && typeof (w as Record<string, unknown>)[key] === "string" ? ((w as unknown as Record<string, string>)[key] as string) : whole));
-  const links = [{ href: "docs/index.html", say: "docs" }];
+  const links = [{ href: "builder.html", say: "builderLink" }, { href: "docs/index.html", say: "docs" }];
   return shell(lang, root, "index.html", w.title, w.description, links, body, "demo.js");
+}
+
+/** The builder page: choose an icon or a month, see it, copy the code. */
+export function renderBuilder(lang: Lang): string {
+  const root = lang === "ja" ? "../" : "";
+  const w = WORDS[lang];
+  let body = readFileSync(new URL("../demo/builder.html", import.meta.url), "utf8");
+  body = body.slice(body.indexOf("<!--family:header-->") + "<!--family:header-->".length, body.indexOf("<!--family:footer-->"));
+  body = body.replace(/\{\{(\w+)\}\}/g, (whole, key: string) => (key in w && typeof (w as Record<string, unknown>)[key] === "string" ? ((w as unknown as Record<string, string>)[key] as string) : whole));
+  const links = [{ href: "index.html", say: "demoLink" }, { href: "docs/index.html", say: "docs" }];
+  return shell(lang, root, "builder.html", w.builderTitle, w.builderDescription, links, body, "builder.js");
 }
 
 /** A docs page from its Markdown. `name` is the file's name without `.md`, `.ja.md`. */

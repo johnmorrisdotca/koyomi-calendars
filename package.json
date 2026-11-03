@@ -177,7 +177,9 @@
     "site": "pnpm build && node scripts/site.ts",
     "dev": "pnpm site && node scripts/dev.ts",
     "test:demo": "pnpm site && playwright test",
-    "images": "pnpm site && node scripts/images.ts"
+    "images": "pnpm site && node scripts/images.ts",
+    "docs:api": "pnpm build && node scripts/docs.mjs api",
+    "docs:check": "pnpm build && node scripts/docs.mjs check"
   },
   "devDependencies": {
     "@eslint/js": "^9.0.0",

@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="{{lang}}"><head><!--family:head--><link rel="stylesheet" href="{{root}}family.css"><link rel="stylesheet" href="{{root}}koyomi.css"></head>
+<body><main><!--family:header-->
+<section class="stage-panel" aria-labelledby="heading">
+  <h2 id="heading" data-say="builderHeading">{{builderHeading}}</h2>
+  <p data-say="builderIntro">{{builderIntro}}</p>
+  <div class="fam-row"><span class="fam-label" data-say="builderWhat">{{builderWhat}}</span><span class="fam-seg" id="seg-what" role="group" aria-label="{{builderWhat}}"></span></div>
+  <div class="stage-grid">
+    <div class="stage-box"><div id="stage" class="stage" data-testid="stage" aria-live="polite"></div></div>
+    <div class="controls" id="controls" data-testid="controls"></div>
+  </div>
+</section>
+<section class="more" aria-labelledby="code-heading">
+  <h2 id="code-heading" data-say="codeHeading">{{codeHeading}}</h2>
+  <div class="fam-row"><span class="fam-label" data-say="builderFormat">{{builderFormat}}</span><span class="fam-seg" id="seg-format" role="group" aria-label="{{builderFormat}}"></span><button type="button" class="fam-button" id="copy" data-say="copy">{{copy}}</button></div>
+  <pre><code id="code" data-testid="code"></code></pre>
+</section>
+<!--family:footer--></main><!--family:scripts--></body></html>

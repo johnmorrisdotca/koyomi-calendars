@@ -6,6 +6,16 @@
 
 **Calendar pages as SVG, in under 10 kB.** One day as an icon, in 18 original designs, light and dark. A whole month as a poster, a memo board, a wall page or a desk pad. And the page turning, from one day to the next and back.
 
+<p align="center">
+  <a href="https://github.com/johnmorrisdotca/koyomi-calendars/actions/workflows/pages.yml"><img alt="Pages" src="https://github.com/johnmorrisdotca/koyomi-calendars/actions/workflows/pages.yml/badge.svg"></a>
+  <a href="https://www.npmjs.com/package/@johnmorrisdotca/koyomi-calendars"><img alt="npm" src="https://img.shields.io/npm/v/@johnmorrisdotca/koyomi-calendars"></a>
+  <img alt="No dependencies" src="https://img.shields.io/badge/dependencies-0-2f5d4a">
+  <img alt="TypeScript" src="https://img.shields.io/badge/types-TypeScript-3178c6">
+  <img alt="MIT licence" src="https://img.shields.io/badge/licence-MIT-2f5d4a">
+</p>
+
+## In 30 seconds
+
 ```sh
 npm install @johnmorrisdotca/koyomi-calendars
 ```
@@ -17,9 +27,16 @@ const svg = calendarIcon({ theme: "squircle", month: 11, day: 2, year: 2026, sch
 console.log(svg.startsWith("<svg")); // true
 ```
 
-**[Open the demo](https://johnmorrisdotca.github.io/koyomi-calendars/)** ([日本語のデモ](https://johnmorrisdotca.github.io/koyomi-calendars/ja/)): pick a design, a housing, rings and a turn, turn the page back and forward, and copy the code.
+**[Open the demo](https://johnmorrisdotca.github.io/koyomi-calendars/)** ([日本語のデモ](https://johnmorrisdotca.github.io/koyomi-calendars/ja/)): pick a design, a housing, rings and a turn, turn the page back and forward, and copy the code. The [builder](https://johnmorrisdotca.github.io/koyomi-calendars/builder.html) does the same for a whole setup, in a page of its own.
 
-## What you get
+## Who it is for
+
+- An app, a site or a dashboard that wants a date as a picture: a today icon, a calendar tile, a month on a page, an event's day.
+- A server that has to draw a calendar page for an email, a share card or a PDF, with no browser and no image library.
+- A page in Japanese, with the holidays, the old calendar and the six-day cycle on a tear-off page, computed and never looked up.
+- A product that wants the small icon to stay small: each design is its own import.
+
+## Features
 
 - **18 designs, light and dark.** Every one is our own drawing: shapes, gradients and a stroke-drawn digit set. No image, no font file, no logo, no company's name.
 - **Small.** One design alone is about 9 kB minified (4 kB gzipped), and imports nothing else. Import a design from `@johnmorrisdotca/koyomi-calendars/themes/squircle` and the other 17 never reach the page. All 18 together are about 49 kB.
@@ -31,7 +48,159 @@ console.log(svg.startsWith("<svg")); // true
 
 ![The 18 designs in light](docs/images/designs-light.png)
 
+## Install
+
+```sh
+npm install @johnmorrisdotca/koyomi-calendars
+```
+
+```sh
+pnpm add @johnmorrisdotca/koyomi-calendars
+```
+
+Node 22 or later, or any current browser. Everything is an ES module with its types; there is nothing to configure.
+
+## Use it in your project
+
+In a bundler, a framework or a Node program, import what you use:
+
+```js
+import { calendarIcon, CALENDAR_THEMES } from "@johnmorrisdotca/koyomi-calendars";
+
+console.log(CALENDAR_THEMES.length); // 18
+const svg = calendarIcon({ theme: "pins", month: 7, day: 17, year: 2026, size: 120 });
+console.log(svg.includes('viewBox="20 15 273 280"')); // true
+```
+
+In TypeScript, the options are typed:
+
+```ts
+import { calendarIcon, type CalendarIconOptions } from "@johnmorrisdotca/koyomi-calendars";
+
+const options: CalendarIconOptions = { theme: "squircle", month: 11, day: 2, year: 2026, scheme: "light" };
+const svg: string = calendarIcon(options);
+```
+
+The result is an SVG string with a `title` and an `aria-label`. Put it in the page with `innerHTML`, write it to a file, or send it from a server. The library never reads the clock: you say the date.
+
+## Use it anywhere
+
+On a page with no bundler, import from a CDN that serves the package's ES modules, or from your own copy of `dist`:
+
+```html
+<div id="today"></div>
+<script type="module">
+  import { calendarIcon } from "https://cdn.jsdelivr.net/npm/@johnmorrisdotca/koyomi-calendars/dist/themes/squircle.js";
+  const now = new Date();
+  document.querySelector("#today").innerHTML = calendarIcon({ month: now.getMonth() + 1, day: now.getDate(), year: now.getFullYear() });
+</script>
+```
+
+On a server, in a build script or in a worker, call the same functions and write the string where you need it:
+
+```js
+import { calendarIcon } from "@johnmorrisdotca/koyomi-calendars";
+import { monthCalendar } from "@johnmorrisdotca/koyomi-calendars/month";
+
+const files = { "today.svg": calendarIcon({ month: 11, day: 2 }), "month.svg": monthCalendar({ year: 2026, month: 11 }) };
+console.log(Object.keys(files).join(" ")); // today.svg month.svg
+```
+
+## Examples
+
+A whole month with notes, an icon in Japanese and the same icon one design alone:
+
+```js
+import { monthCalendar } from "@johnmorrisdotca/koyomi-calendars/month";
+
+const svg = monthCalendar({ year: 2026, month: 11, design: "poster", weekStart: "monday", notes: { "11-07": "Dentist 14:00" } });
+console.log(svg.includes("Dentist")); // true
+```
+
+```js
+import { calendarIcon } from "@johnmorrisdotca/koyomi-calendars/themes/sun";
+
+const page = calendarIcon({ month: 11, day: 3, year: 2026, locale: "ja", japanese: true });
+console.log(page.includes('data-part="side"')); // true
+```
+
+## The 18 designs
+
+`pins`, `loops`, `shadow`, `heavy`, `cartoon`, `flip`, `stack`, `line`, `curl`, `soft`, `desk`, `thin`, `frame`, `badge`, `sun`, `roll`, `plain` and `squircle`. Every design has a light and a dark version (`scheme: "light"` or `"dark"`). The ten names of the first release (`classic`, `outline` and so on) still work: each reads as the design that replaced it. The list with what each one looks like is in [Icons and designs](https://github.com/johnmorrisdotca/koyomi-calendars/blob/main/docs/guides/icons-and-designs.md).
+
+```js
+import { CALENDAR_THEME_LABELS, calendarThemeOf } from "@johnmorrisdotca/koyomi-calendars";
+
+console.log(CALENDAR_THEME_LABELS.sun.en); // Sun disc
+console.log(calendarThemeOf("classic")); // pins
+```
+
+![The 18 designs in dark](docs/images/designs-dark.png)
+
+## Housing, rings and turn
+
+Three options change the whole icon and leave a design's drawing alone; with none of them set, the output is the same bytes as without them.
+
+- `housing: "circle"` sets the icon on a coloured disc; `housingColour` takes any CSS colour. The default is `"square"`: the icon alone.
+- `rings: true` draws spiral rings across the top of the page, on the designs that have no binding of their own: `badge`, `frame`, `sun`, `roll`, `plain` and `squircle`. A number (0 to 24) sets how many. The other designs ignore it.
+- `turn` turns the whole icon a little, in degrees (-45 to 45; negative is to the left), as older macOS icons stood.
+
+```js
+import { calendarIcon } from "@johnmorrisdotca/koyomi-calendars";
+
+const round = calendarIcon({ theme: "badge", month: 3, day: 9, housing: "circle", rings: true, turn: -8 });
+console.log(round.includes("<circle")); // true
+console.log(round.includes("rotate(-8")); // true
+```
+
+![Five looks of the badge, in light and dark](docs/images/looks.png)
+
+## Presets
+
+A preset is a name for a set of those options: `flat`, `disc`, `ringed`, `tilted` and `disc-ringed`. An option you give yourself wins over the preset.
+
+```js
+import { calendarIcon, CALENDAR_PRESETS } from "@johnmorrisdotca/koyomi-calendars";
+
+console.log(Object.keys(CALENDAR_PRESETS).join(" ")); // flat disc ringed tilted disc-ringed
+const svg = calendarIcon({ theme: "squircle", month: 1, day: 1, preset: "disc-ringed", turn: 0 });
+console.log(svg.includes("rotate")); // false
+```
+
+## One design alone
+
+Each design is also its own import, which carries none of the others:
+
+```js
+import { calendarIcon } from "@johnmorrisdotca/koyomi-calendars/themes/squircle";
+
+const svg = calendarIcon({ month: 11, day: 2 });
+console.log(svg.startsWith("<svg")); // true
+```
+
+`pnpm check` holds the size of each import to a budget: see [Sizes and bundles](https://github.com/johnmorrisdotca/koyomi-calendars/blob/main/docs/guides/sizes-and-bundles.md).
+
+## A whole month
+
+`monthCalendar` draws a month as a poster, a memo board, a wall page or a desk pad, for any month and year. It is a separate import (`/month`).
+
+```js
+import { daysInMonth, monthCalendar, monthGrid, MONTH_DESIGNS } from "@johnmorrisdotca/koyomi-calendars/month";
+
+console.log(MONTH_DESIGNS.join(" ")); // poster board wall desk
+console.log(daysInMonth(2024, 2)); // 29
+console.log(monthGrid(2026, 2, "monday").weeks.length); // 5
+const svg = monthCalendar({ year: 2026, month: 11, design: "wall", notes: { "11-23": "Day off" } });
+console.log(svg.includes("Day off")); // true
+```
+
+![Four month pages](docs/images/months.png)
+
+See [Month pages](https://github.com/johnmorrisdotca/koyomi-calendars/blob/main/docs/guides/month-pages.md).
+
 ## The page turning
+
+`flipCalendar` turns the icon in an element from one date to the next or back, in four ways. It needs a browser.
 
 ```js no-run
 import { flipCalendar, nextDay } from "@johnmorrisdotca/koyomi-calendars/animate";
@@ -43,30 +212,174 @@ await flipCalendar(element, { render: (d) => calendarIcon({ ...d }), from, to: n
 
 ![The page torn down, forwards and backwards](docs/images/turn-tear-down.png)
 
-The four ways are `tear-down`, `fly-up`, `rip-corner` and `flip-down`; the [docs](docs/animate.md) show each.
-
-## A whole month
+The four ways are `tear-down`, `fly-up`, `rip-corner` and `flip-down`; the [docs](docs/animate.md) and [Turning the page](https://github.com/johnmorrisdotca/koyomi-calendars/blob/main/docs/guides/turning-the-page.md) show each. The date helpers work anywhere:
 
 ```js
-import { monthCalendar } from "@johnmorrisdotca/koyomi-calendars/month";
+import { addDays, compareDays, nextDay } from "@johnmorrisdotca/koyomi-calendars/animate";
 
-const svg = monthCalendar({ year: 2026, month: 11, design: "poster", weekStart: "monday", notes: { "11-07": "Dentist 14:00" } });
-console.log(svg.includes("Dentist")); // true
+console.log(JSON.stringify(nextDay({ year: 2026, month: 12, day: 31 }))); // {"year":2027,"month":1,"day":1}
+console.log(JSON.stringify(addDays({ year: 2026, month: 1, day: 31 }, 30))); // {"year":2026,"month":3,"day":2}
+console.log(compareDays({ year: 2026, month: 1, day: 1 }, { year: 2026, month: 1, day: 2 })); // 1
 ```
 
-![Four month pages](docs/images/months.png)
+## The Japanese calendar
 
-## More calendar things will come here
+The Japanese public holidays (2000 to 2099), the old calendar (1900 to 2100) and the six-day cycle are computed, never looked up, and a date the method cannot settle gives `null`. They are functions in the main import and in `/japanese`, and the tear-off designs `sun`, `roll` and `plain` can write them in their side columns with `japanese: true`.
 
-Koyomi is meant to become the family's home for everything calendar: today the icons, the month pages and the page turning; more will arrive in this package.
+```js
+import { japaneseHoliday, oldCalendarDate, rokuyoOf } from "@johnmorrisdotca/koyomi-calendars/japanese";
+
+console.log(japaneseHoliday(2026, 11, 3)?.en); // Culture Day
+console.log(JSON.stringify(oldCalendarDate(2026, 11, 2))); // {"month":9,"day":23,"leap":false}
+console.log(rokuyoOf(2026, 11, 2)?.reading); // Senshō
+```
+
+![The tear-off designs in Japanese](docs/images/japanese-pages.png)
+
+The functions are also `japaneseHolidaysOf`, `JAPANESE_HOLIDAY_YEARS`, `OLD_CALENDAR_YEARS` and `ROKUYO`. See [The Japanese calendar](https://github.com/johnmorrisdotca/koyomi-calendars/blob/main/docs/guides/japanese-calendar.md).
+
+## Languages
+
+`locale` is `en` or any locale `Intl` accepts, for the icons and the months. The package ships no list of month or weekday names.
+
+```js
+import { calendarIcon } from "@johnmorrisdotca/koyomi-calendars";
+
+const fr = calendarIcon({ theme: "pins", month: 11, day: 2, year: 2026, locale: "fr" });
+console.log(fr.includes("lundi")); // true
+```
+
+## Frameworks
+
+The package returns text, so it needs no wrapper. In React:
+
+```jsx
+import { calendarIcon } from "@johnmorrisdotca/koyomi-calendars";
+
+export const DayIcon = ({ date }) => (
+  <span dangerouslySetInnerHTML={{ __html: calendarIcon({ month: date.getMonth() + 1, day: date.getDate(), year: date.getFullYear() }) }} />
+);
+```
+
+In Vue:
+
+```vue
+<script setup>
+import { monthCalendar } from "@johnmorrisdotca/koyomi-calendars/month";
+const props = defineProps({ year: Number, month: Number });
+</script>
+<template><div v-html="monthCalendar({ year: props.year, month: props.month })" /></template>
+```
+
+Svelte, Angular, a server and a static site are in [Frameworks and servers](https://github.com/johnmorrisdotca/koyomi-calendars/blob/main/docs/guides/frameworks.md).
+
+## Theming
+
+`scheme` is `"light"` or `"dark"`; you choose it, for instance from `prefers-color-scheme`, because the library reads nothing. `housingColour` sets a disc's colour, `size` the width, and the page decides where it goes. For a file, make both and let the page choose:
+
+```html
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="today-dark.svg">
+  <img src="today-light.svg" alt="Monday 2 November 2026">
+</picture>
+```
+
+See [Accessibility and theming](https://github.com/johnmorrisdotca/koyomi-calendars/blob/main/docs/guides/accessibility-and-theming.md).
+
+```js
+import { calendarIcon } from "@johnmorrisdotca/koyomi-calendars";
+
+const svg = calendarIcon({ month: 11, day: 2, scheme: "dark", housing: "circle", housingColour: "#335577", size: 160 });
+console.log(svg.includes("#335577")); // true
+```
+
+## Accessibility
+
+Every icon and month page is an SVG with `role="img"`, a `title` and an `aria-label` naming the date in its own language. `flipCalendar` respects `prefers-reduced-motion`. Nothing else moves. See the [accessibility guide](https://github.com/johnmorrisdotca/koyomi-calendars/blob/main/docs/guides/accessibility-and-theming.md).
+
+```js
+import { calendarIcon } from "@johnmorrisdotca/koyomi-calendars";
+
+const svg = calendarIcon({ month: 11, day: 2, year: 2026 });
+console.log(svg.includes('role="img"'), svg.includes("<title>Monday Nov 2 2026</title>")); // true true
+```
+
+## Limits
+
+- **Dates are not validated against their month.** `calendarIcon` checks that the day is 1 to 31, not that the month has it; `daysInMonth` knows.
+- **Japanese holidays 2000 to 2099, old calendar 1900 to 2100.** Outside those years the answer is `null`.
+- **No holiday of any other country.** A month page takes its notes from you.
+- **Equinox days are a prediction** for far years: the observatory announces each year's in February of the year before.
+- **`flipCalendar` needs a browser** (the Web Animations API) and an element.
+- **An unknown locale falls back to English** rather than failing.
+
+For the first limit, the icon is drawn, and `daysInMonth` is how to know:
+
+```js
+import { calendarIcon } from "@johnmorrisdotca/koyomi-calendars";
+import { daysInMonth } from "@johnmorrisdotca/koyomi-calendars/month";
+
+console.log(calendarIcon({ month: 2, day: 31 }).startsWith("<svg")); // true
+console.log(daysInMonth(2026, 2)); // 28
+```
+
+## Browser and runtime support
+
+Node 22 or later and any current browser draw icons and months, since the library is string work and `Intl`. `flipCalendar` needs the Web Animations API (every current browser). The demo is played in Chromium and WebKit by `pnpm test:demo`. A runtime with a reduced `Intl` (a small ICU build) knows fewer locales.
+
+## Roadmap
+
+Koyomi is meant to become the family's home for everything calendar: today the icons, the month pages and the page turning; more will arrive in this package, each its own import so the small icon stays small.
+
+## Architecture
+
+Each part is its own import; a design is one file that imports only the shared kit; a drawing is a pure function of its options. The imports, the rules and how an icon is made are in the [architecture guide](https://github.com/johnmorrisdotca/koyomi-calendars/blob/main/docs/guides/architecture.md).
 
 ## The API in a list
 
-Main import: `calendarIcon`, `calendarLayout`, `CALENDAR_THEMES`, `CALENDAR_THEME_LABELS`, `CALENDAR_THEME_ALIASES`, `calendarThemeOf`, `CALENDAR_YEAR_MIN`, `CALENDAR_YEAR_CLEAR`, `calendarWeekend`, `calendarMoon`, `CALENDAR_HOUSINGS`, `CALENDAR_TURN_MAX`, `CALENDAR_PRESETS`, `calendarPresetOf`, and the Japanese calendar functions `japaneseHoliday`, `japaneseHolidaysOf`, `JAPANESE_HOLIDAY_YEARS`, `oldCalendarDate`, `OLD_CALENDAR_YEARS`, `ROKUYO` and `rokuyoOf`. Each design alone: `themes/<name>` exports `calendarIcon`. `/animate`: `flipCalendar`, `nextDay`, `previousDay`, `addDays`, `compareDays`, `CALENDAR_FLIPS`. `/month`: `monthCalendar`, `monthGrid`, `daysInMonth`, `MONTH_DESIGNS`.
+Main import: `calendarIcon`, `calendarLayout`, `CALENDAR_THEMES`, `CALENDAR_THEME_LABELS`, `CALENDAR_THEME_ALIASES`, `calendarThemeOf`, `CALENDAR_YEAR_MIN`, `CALENDAR_YEAR_CLEAR`, `calendarWeekend`, `calendarMoon`, `CALENDAR_HOUSINGS`, `CALENDAR_TURN_MAX`, `CALENDAR_PRESETS`, `calendarPresetOf`, and the Japanese calendar functions `japaneseHoliday`, `japaneseHolidaysOf`, `JAPANESE_HOLIDAY_YEARS`, `oldCalendarDate`, `OLD_CALENDAR_YEARS`, `ROKUYO` and `rokuyoOf`. Each design alone: `themes/<name>` exports `calendarIcon`. `/animate`: `flipCalendar`, `nextDay`, `previousDay`, `addDays`, `compareDays`, `CALENDAR_FLIPS`. `/month`: `monthCalendar`, `monthGrid`, `daysInMonth`, `MONTH_DESIGNS`. Every export of every import, with its signature, is in the generated [API reference](https://github.com/johnmorrisdotca/koyomi-calendars/blob/main/docs/API.md).
 
-## Docs
+## Documentation
 
-[Overview](docs/index.md) · [Icons](docs/icons.md) · [Turning the page](docs/animate.md) · [Whole months](docs/month.md) · [日本語](docs/index.ja.md)
+| Guide | What it covers |
+|---|---|
+| [Getting started](https://github.com/johnmorrisdotca/koyomi-calendars/blob/main/docs/guides/getting-started.md) | A first icon, a month and a page turn |
+| [Icons and designs](https://github.com/johnmorrisdotca/koyomi-calendars/blob/main/docs/guides/icons-and-designs.md) | The 18 designs and every option |
+| [Housing, rings and turn](https://github.com/johnmorrisdotca/koyomi-calendars/blob/main/docs/guides/looks.md) | The frame options and the presets |
+| [Month pages](https://github.com/johnmorrisdotca/koyomi-calendars/blob/main/docs/guides/month-pages.md) | Four designs, notes, the grid as data |
+| [Turning the page](https://github.com/johnmorrisdotca/koyomi-calendars/blob/main/docs/guides/turning-the-page.md) | The four ways, dates, reduced motion |
+| [The Japanese calendar](https://github.com/johnmorrisdotca/koyomi-calendars/blob/main/docs/guides/japanese-calendar.md) | Holidays, old calendar, six-day cycle |
+| [Languages and locales](https://github.com/johnmorrisdotca/koyomi-calendars/blob/main/docs/guides/languages-and-locales.md) | `Intl` words and fallbacks |
+| [Sizes and bundles](https://github.com/johnmorrisdotca/koyomi-calendars/blob/main/docs/guides/sizes-and-bundles.md) | What each import costs |
+| [Frameworks and servers](https://github.com/johnmorrisdotca/koyomi-calendars/blob/main/docs/guides/frameworks.md) | React, Vue, Svelte, Angular, servers, files |
+| [Accessibility and theming](https://github.com/johnmorrisdotca/koyomi-calendars/blob/main/docs/guides/accessibility-and-theming.md) | Labels, light and dark, reduced motion |
+| [Architecture](https://github.com/johnmorrisdotca/koyomi-calendars/blob/main/docs/guides/architecture.md) | The imports and the rules |
+| [Troubleshooting and FAQ](https://github.com/johnmorrisdotca/koyomi-calendars/blob/main/docs/guides/troubleshooting.md) | RangeError, empty columns, flips |
+| [Upgrading](https://github.com/johnmorrisdotca/koyomi-calendars/blob/main/docs/guides/upgrading.md) | What each version asks of you |
+
+Every guide has a Japanese page of the same name in [docs/guides/ja](https://github.com/johnmorrisdotca/koyomi-calendars/blob/main/docs/guides/ja). The older pages are [Overview](docs/index.md) · [Icons](docs/icons.md) · [Turning the page](docs/animate.md) · [Whole months](docs/month.md) · [日本語](docs/index.ja.md).
+
+## Development
+
+Needs Node 22.18 or later to work on it: the tests, the scripts and the demo's server run TypeScript directly.
+
+```sh
+pnpm check          # lint, types, tests, the build, the packed package and the byte budgets
+pnpm test:readme    # every example of the README, the docs and the guides
+pnpm docs:check     # the API reference is current, every guide has its Japanese page, every link and picture is there
+pnpm docs:api       # rewrite docs/API.md from the built declarations
+pnpm test:demo      # builds the demo and plays it in Chromium and WebKit
+pnpm dev            # the demo at http://127.0.0.1:8000/
+pnpm images         # retake the pictures of the README and the guides (docs/images)
+```
+
+## Contributing
+
+See [CONTRIBUTING.md](CONTRIBUTING.md): no runtime dependencies, a pure core, one small file for each design, output that does not change by accident, drawings that are our own, and docs that are run. Add a line to `CHANGELOG.md` under **Unreleased** for every change.
+
+## Changes
+
+Every release, dated, is in [CHANGELOG.md](CHANGELOG.md).
 
 ## The name
 
