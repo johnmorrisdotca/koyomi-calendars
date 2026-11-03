@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>One calendar design from unpkg</title>
+  </head>
+  <body>
+    <div id="today"></div>
+    <script type="module">
+      import { calendarIcon } from "https://unpkg.com/@johnmorrisdotca/koyomi-calendars/dist/themes/badge.js";
+
+      const now = new Date();
+      document.querySelector("#today").innerHTML = calendarIcon({ month: now.getMonth() + 1, day: now.getDate(), year: now.getFullYear() });
+    </script>
+  </body>
+</html>

@@ -4,10 +4,38 @@
 import type { CalendarIconOptions, Rect } from "./types.ts";
 import { r2 } from "./kit.ts";
 
+/**
+ * The housings an icon can sit in: `square` (the icon alone) and `circle` (on a coloured disc).
+ * @example
+ * ```ts
+ * import { CALENDAR_HOUSINGS } from "@johnmorrisdotca/koyomi-calendars";
+ *
+ * console.log(CALENDAR_HOUSINGS.join(", "));
+ * ```
+ */
 export const CALENDAR_HOUSINGS = ["square", "circle"] as const;
+/**
+ * One of the housings in `CALENDAR_HOUSINGS`.
+ * @example
+ * ```ts
+ * import { calendarIcon, type CalendarHousing } from "@johnmorrisdotca/koyomi-calendars";
+ *
+ * const housing: CalendarHousing = "circle";
+ * console.log(calendarIcon({ month: 11, day: 3, housing }).startsWith("<svg"));
+ * ```
+ */
 export type CalendarHousing = (typeof CALENDAR_HOUSINGS)[number];
 
-/** The most the icon may be turned either way, in degrees. */
+/**
+ * The most the icon may be turned either way, in degrees.
+ * @example
+ * ```ts
+ * import { CALENDAR_TURN_MAX, calendarIcon } from "@johnmorrisdotca/koyomi-calendars";
+ *
+ * console.log(CALENDAR_TURN_MAX);
+ * console.log(calendarIcon({ month: 11, day: 3, turn: CALENDAR_TURN_MAX }).startsWith("<svg"));
+ * ```
+ */
 export const CALENDAR_TURN_MAX = 45;
 
 const COLOUR = /^[#a-zA-Z0-9(),.%\s-]{1,64}$/;

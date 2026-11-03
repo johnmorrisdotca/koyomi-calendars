@@ -2,13 +2,39 @@
 
 import type { Parts } from "./types.ts";
 
+/**
+ * A day on the calendar: a four-digit year, a month 1 to 12 and a day of the month.
+ * @example
+ * ```ts
+ * import { calendarWeekend, type CalendarDate } from "@johnmorrisdotca/koyomi-calendars";
+ *
+ * const saturday: CalendarDate | undefined = calendarWeekend(2026, 11, 7)?.saturday;
+ * console.log(saturday);
+ * ```
+ */
 export interface CalendarDate {
   year: number;
   month: number;
   day: number;
 }
 
-/** The Saturday and the Sunday of the weekend a date is in, or null for a weekday, a day the month does not have, or a weekend that runs outside years 1 to 9999. The Sunday may be in the next month or year. */
+/**
+ * The Saturday and the Sunday of the weekend a date is in.
+ *
+ * The Sunday may be in the next month or year.
+ *
+ * @param year - Four-digit year.
+ * @param month - Month 1 to 12.
+ * @param day - Day of the month.
+ * @returns The two days, or `null` for a weekday, a day the month does not have, or a weekend that runs outside years 1 to 9999.
+ * @example
+ * ```ts
+ * import { calendarWeekend } from "@johnmorrisdotca/koyomi-calendars";
+ *
+ * console.log(calendarWeekend(2026, 11, 7));
+ * console.log(calendarWeekend(2026, 11, 4));
+ * ```
+ */
 export function calendarWeekend(year: number, month: number, day: number): { saturday: CalendarDate; sunday: CalendarDate } | null {
   const at = utc(year, month, day);
   if (at.getUTCMonth() !== month - 1 || at.getUTCDate() !== day) return null;
@@ -33,7 +59,22 @@ export function dateOf(date: Date): CalendarDate {
 const MOON_MONTH = 29.530588853;
 const NEW_MOON = Date.UTC(2000, 0, 6, 18, 14);
 
-/** The phase of the moon at noon UTC on a date, in eighths of a lunation: 0 new, 2 first quarter, 4 full, 6 last quarter. A mean lunation from a known new moon, so it can be a day out near the turn of a phase. */
+/**
+ * The phase of the moon at noon UTC on a date, in eighths of a lunation: 0 new, 2 first quarter, 4 full, 6 last quarter.
+ *
+ * A mean lunation from a known new moon, so it can be a day out near the turn of a phase.
+ *
+ * @param year - Four-digit year.
+ * @param month - Month 1 to 12.
+ * @param day - Day of the month.
+ * @returns A whole number 0 to 7.
+ * @example
+ * ```ts
+ * import { calendarMoon } from "@johnmorrisdotca/koyomi-calendars";
+ *
+ * console.log(calendarMoon(2026, 11, 3));
+ * ```
+ */
 export function calendarMoon(year: number, month: number, day: number): number {
   const age = (((utc(year, month, day).getTime() + 12 * 3600000 - NEW_MOON) / 86400000) % MOON_MONTH + MOON_MONTH) % MOON_MONTH;
   return Math.round((age / MOON_MONTH) * 8) % 8;

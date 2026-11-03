@@ -253,12 +253,13 @@ console.log(fr.includes("lundi")); // true
 
 The package returns text, so it needs no wrapper. In React:
 
-```jsx
-import { calendarIcon } from "@johnmorrisdotca/koyomi-calendars";
+```tsx
+import { calendarIcon, type CalendarTheme } from "@johnmorrisdotca/koyomi-calendars";
 
-export const DayIcon = ({ date }) => (
-  <span dangerouslySetInnerHTML={{ __html: calendarIcon({ month: date.getMonth() + 1, day: date.getDate(), year: date.getFullYear() }) }} />
-);
+export function DayIcon({ date, theme = "squircle" }: { date: Date; theme?: CalendarTheme }) {
+  const svg = calendarIcon({ theme, month: date.getMonth() + 1, day: date.getDate(), year: date.getFullYear() });
+  return <span role="img" aria-label={date.toDateString()} dangerouslySetInnerHTML={{ __html: svg }} />;
+}
 ```
 
 In Vue:
@@ -272,6 +273,31 @@ const props = defineProps({ year: Number, month: Number });
 ```
 
 Svelte, Angular, a server and a static site are in [Frameworks and servers](https://github.com/johnmorrisdotca/koyomi-calendars/blob/main/docs/guides/frameworks.md).
+
+In a page of any kind, with no script of your own, an iframe of the [embed page](https://johnmorrisdotca.github.io/koyomi-calendars/embed.html) draws what its address says:
+
+```html
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Koyomi Calendars in an iframe</title>
+  </head>
+  <body>
+    <iframe
+      src="https://johnmorrisdotca.github.io/koyomi-calendars/embed.html?theme=squircle&date=2026-11-03&scheme=light&preset=disc-ringed"
+      title="A calendar page for 3 November 2026"
+      width="240"
+      height="240"
+      loading="lazy"
+      style="border: 0"
+    ></iframe>
+  </body>
+</html>
+```
+
+The address takes the day, the design, the scheme, a look and a language; the [iframe guide](https://github.com/johnmorrisdotca/koyomi-calendars/blob/main/docs/guides/embed-in-an-iframe.md) lists them all. Vite, webpack, a CDN and TypeScript have their own guides, linked below.
 
 ## Theming
 
@@ -341,6 +367,8 @@ Main import: `calendarIcon`, `calendarLayout`, `CALENDAR_THEMES`, `CALENDAR_THEM
 
 ## Documentation
 
+The [documentation site](https://johnmorrisdotca.github.io/koyomi-calendars/docs/) has a page for every export, the guides below in English and Japanese, and search; the [embed page](https://johnmorrisdotca.github.io/koyomi-calendars/embed.html) is made for an iframe.
+
 | Guide | What it covers |
 |---|---|
 | [Getting started](https://github.com/johnmorrisdotca/koyomi-calendars/blob/main/docs/guides/getting-started.md) | A first icon, a month and a page turn |
@@ -352,6 +380,10 @@ Main import: `calendarIcon`, `calendarLayout`, `CALENDAR_THEMES`, `CALENDAR_THEM
 | [Languages and locales](https://github.com/johnmorrisdotca/koyomi-calendars/blob/main/docs/guides/languages-and-locales.md) | `Intl` words and fallbacks |
 | [Sizes and bundles](https://github.com/johnmorrisdotca/koyomi-calendars/blob/main/docs/guides/sizes-and-bundles.md) | What each import costs |
 | [Frameworks and servers](https://github.com/johnmorrisdotca/koyomi-calendars/blob/main/docs/guides/frameworks.md) | React, Vue, Svelte, Angular, servers, files |
+| [Vite and webpack](https://github.com/johnmorrisdotca/koyomi-calendars/blob/main/docs/guides/bundlers.md) | A bundler, one design alone, what reached the bundle |
+| [Plain HTML and a CDN](https://github.com/johnmorrisdotca/koyomi-calendars/blob/main/docs/guides/html-and-cdn.md) | jsDelivr, unpkg, a page with no build |
+| [Embed it with an iframe](https://github.com/johnmorrisdotca/koyomi-calendars/blob/main/docs/guides/embed-in-an-iframe.md) | The embed page and every parameter of its address |
+| [TypeScript and Node](https://github.com/johnmorrisdotca/koyomi-calendars/blob/main/docs/guides/typescript-and-node.md) | The types, a server, files |
 | [Accessibility and theming](https://github.com/johnmorrisdotca/koyomi-calendars/blob/main/docs/guides/accessibility-and-theming.md) | Labels, light and dark, reduced motion |
 | [Architecture](https://github.com/johnmorrisdotca/koyomi-calendars/blob/main/docs/guides/architecture.md) | The imports and the rules |
 | [Troubleshooting and FAQ](https://github.com/johnmorrisdotca/koyomi-calendars/blob/main/docs/guides/troubleshooting.md) | RangeError, empty columns, flips |
@@ -366,8 +398,10 @@ Needs Node 22.18 or later to work on it: the tests, the scripts and the demo's s
 ```sh
 pnpm check          # lint, types, tests, the build, the packed package and the byte budgets
 pnpm test:readme    # every example of the README, the docs and the guides
-pnpm docs:check     # the API reference is current, every guide has its Japanese page, every link and picture is there
+pnpm test:usage     # every way of using the package (CDN, Vite, webpack, React, Vue, Svelte, Angular, an iframe, TypeScript, Node), built and opened as npm packs it
+pnpm docs:check     # every export has its TSDoc and example, every guide its front matter and links, and every example runs
 pnpm docs:api       # rewrite docs/API.md from the built declarations
+pnpm docs:api:check # docs/API.md is current, every guide has its Japanese page, every link and picture is there
 pnpm test:demo      # builds the demo and plays it in Chromium and WebKit
 pnpm dev            # the demo at http://127.0.0.1:8000/
 pnpm images         # retake the pictures of the README and the guides (docs/images)

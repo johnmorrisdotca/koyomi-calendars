@@ -7,9 +7,37 @@ import { ringsMarkup } from "./frame.ts";
 import { localeOf } from "./date.ts";
 import type { Rect } from "./types.ts";
 
+/**
+ * The four month designs: a wall `poster`, a memo `board`, a spiral-bound `wall` page and a `desk` pad.
+ * @example
+ * ```ts
+ * import { MONTH_DESIGNS } from "@johnmorrisdotca/koyomi-calendars/month";
+ *
+ * console.log(MONTH_DESIGNS.join(", "));
+ * ```
+ */
 export const MONTH_DESIGNS = ["poster", "board", "wall", "desk"] as const;
+/**
+ * One of the names in `MONTH_DESIGNS`.
+ * @example
+ * ```ts
+ * import { monthCalendar, type MonthDesign } from "@johnmorrisdotca/koyomi-calendars/month";
+ *
+ * const design: MonthDesign = "desk";
+ * console.log(monthCalendar({ year: 2026, month: 11, design }).startsWith("<svg"));
+ * ```
+ */
 export type MonthDesign = (typeof MONTH_DESIGNS)[number];
 
+/**
+ * Each month design's name for a picker, in English and in Japanese.
+ * @example
+ * ```ts
+ * import { MONTH_DESIGN_LABELS } from "@johnmorrisdotca/koyomi-calendars/month";
+ *
+ * console.log(MONTH_DESIGN_LABELS.desk.en);
+ * ```
+ */
 export const MONTH_DESIGN_LABELS: Record<MonthDesign, { en: string; ja: string }> = {
   poster: { en: "Poster", ja: "ポスター" },
   board: { en: "Memo board", ja: "メモボード" },
@@ -17,8 +45,30 @@ export const MONTH_DESIGN_LABELS: Record<MonthDesign, { en: string; ja: string }
   desk: { en: "Desk pad", ja: "卓上" },
 };
 
+/**
+ * The first column of a month: `"sunday"` or `"monday"`.
+ * @example
+ * ```ts
+ * import { monthGrid, type WeekStart } from "@johnmorrisdotca/koyomi-calendars/month";
+ *
+ * const weekStart: WeekStart = "monday";
+ * console.log(monthGrid(2026, 11, weekStart).offset);
+ * ```
+ */
 export type WeekStart = "sunday" | "monday";
 
+/**
+ * What `monthCalendar` takes: the month, the design and the look of one month page.
+ *
+ * Only `year` and `month` are required.
+ * @example
+ * ```ts
+ * import { monthCalendar, type MonthCalendarOptions } from "@johnmorrisdotca/koyomi-calendars/month";
+ *
+ * const options: MonthCalendarOptions = { year: 2026, month: 11, design: "wall", weekStart: "monday", notes: { "2026-11-07": "Dinner" } };
+ * console.log(monthCalendar(options).includes("Dinner"));
+ * ```
+ */
 export interface MonthCalendarOptions {
   /** Four-digit year, 1–9999. */
   year: number;
@@ -42,6 +92,16 @@ export interface MonthCalendarOptions {
   mini?: boolean;
 }
 
+/**
+ * One cell of a month grid: a date, its weekday, and whether it belongs to the month.
+ * @example
+ * ```ts
+ * import { monthGrid, type MonthDay } from "@johnmorrisdotca/koyomi-calendars/month";
+ *
+ * const first: MonthDay = monthGrid(2026, 11).weeks[0]![0]!;
+ * console.log(first);
+ * ```
+ */
 export interface MonthDay {
   year: number;
   month: number;
@@ -52,6 +112,16 @@ export interface MonthDay {
   inMonth: boolean;
 }
 
+/**
+ * The weeks of a month: whole weeks of seven days.
+ * @example
+ * ```ts
+ * import { monthGrid, type MonthGrid } from "@johnmorrisdotca/koyomi-calendars/month";
+ *
+ * const grid: MonthGrid = monthGrid(2026, 11);
+ * console.log(grid.weeks.length, grid.daysInMonth);
+ * ```
+ */
 export interface MonthGrid {
   year: number;
   month: number;
@@ -63,7 +133,19 @@ export interface MonthGrid {
   weeks: MonthDay[][];
 }
 
-/** How many days a month has: leap years by the Gregorian rule (a year divisible by 4, but not by 100 unless by 400). */
+/**
+ * How many days a month has: leap years by the Gregorian rule (a year divisible by 4, but not by 100 unless by 400).
+ *
+ * @param year - Four-digit year.
+ * @param month - Month 1 to 12.
+ * @returns 28, 29, 30 or 31.
+ * @example
+ * ```ts
+ * import { daysInMonth } from "@johnmorrisdotca/koyomi-calendars/month";
+ *
+ * console.log(daysInMonth(2028, 2), daysInMonth(2026, 2));
+ * ```
+ */
 export function daysInMonth(year: number, month: number): number {
   if (month === 2) return year % 4 === 0 && (year % 100 !== 0 || year % 400 === 0) ? 29 : 28;
   return [4, 6, 9, 11].includes(month) ? 30 : 31;
@@ -75,7 +157,21 @@ function at(year: number, month: number, day: number): Date {
   return date;
 }
 
-/** The weeks of a month: whole weeks of seven, from the week of the 1st to the week of the last day. */
+/**
+ * The weeks of a month: whole weeks of seven, from the week of the 1st to the week of the last day.
+ *
+ * @param year - Four-digit year.
+ * @param month - Month 1 to 12.
+ * @param weekStart - The first column, `"sunday"` (the default) or `"monday"`.
+ * @returns The grid: how many days the month has, how many cells come before the 1st, and 4, 5 or 6 weeks of seven days.
+ * @example
+ * ```ts
+ * import { monthGrid } from "@johnmorrisdotca/koyomi-calendars/month";
+ *
+ * const grid = monthGrid(2026, 11, "monday");
+ * console.log(grid.offset, grid.weeks.map((week) => week[0]!.day).join(" "));
+ * ```
+ */
 export function monthGrid(year: number, month: number, weekStart: WeekStart = "sunday"): MonthGrid {
   if (!Number.isInteger(year) || year < 1 || year > 9999) throw new RangeError("year must be an integer 1–9999");
   if (!Number.isInteger(month) || month < 1 || month > 12) throw new RangeError("month must be an integer 1–12");
@@ -293,7 +389,21 @@ const COLOURS: Record<MonthDesign, { light: Colours; dark: Colours }> = {
 /** The size of each design's drawing: width and height in its own units. */
 const SIZE: Record<MonthDesign, readonly [number, number]> = { poster: [600, 780], board: [600, 780], wall: [600, 820], desk: [820, 620] };
 
-/** A whole month as an SVG. */
+/**
+ * A whole month as an SVG: a wall poster, a memo board, a spiral-bound wall page or a desk pad.
+ *
+ * The library knows no holiday: every note on a day is yours to give.
+ *
+ * @param options - The `year` and `month`, and the look: `design`, `weekStart`, `locale`, `scheme`, `size`, `notes`, `tint`, `outside` and `mini`.
+ * @returns The page as SVG text, `<svg …>…</svg>`. It throws a `RangeError` for a year or month that is out of range.
+ * @example
+ * ```ts
+ * import { monthCalendar } from "@johnmorrisdotca/koyomi-calendars/month";
+ *
+ * const svg = monthCalendar({ year: 2026, month: 11, design: "poster", scheme: "dark" });
+ * console.log(svg.startsWith("<svg"));
+ * ```
+ */
 export function monthCalendar(options: MonthCalendarOptions): string {
   const design = options.design ?? "poster";
   if (!(MONTH_DESIGNS as readonly string[]).includes(design)) throw new RangeError(`unknown month design: ${String(design)}`);

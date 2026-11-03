@@ -4,7 +4,18 @@ import { renderIcon } from "../render.ts";
 
 const CURL: Rect = [48.5, 157.5, 287, 208.5];
 
-// line art with an orange header, two hooks, thin rounded digits and a curled lower corner.
+/**
+ * The `curl` design's drawing, for the package's own renderer: line art with an orange header, two hooks, thin rounded digits and a curled lower corner.
+ *
+ * Most code wants `calendarIcon` from this file instead, which draws with it.
+ *
+ * @example
+ * ```ts
+ * import { theme } from "@johnmorrisdotca/koyomi-calendars/themes/curl";
+ *
+ * console.log(theme.box.length);
+ * ```
+ */
 export const theme: Def = {
   box: [28, 46, 330, 360],
   numeral: "centre",
@@ -35,7 +46,19 @@ export const theme: Def = {
   },
 };
 
-/** The `curl` page alone: this theme and what it needs, nothing of the other themes. */
+/**
+ * Draws the `curl` calendar page alone: this theme and what it needs, nothing of the other themes.
+ *
+ * @param options - What the main `calendarIcon` takes, without `theme`: the date (`month`, `day`, `year`), `scheme`, `housing`, `rings`, `size` and the rest.
+ * @returns The icon as SVG text, `<svg …>…</svg>`.
+ * @example
+ * ```ts
+ * import { calendarIcon } from "@johnmorrisdotca/koyomi-calendars/themes/curl";
+ *
+ * const svg = calendarIcon({ month: 11, day: 3, year: 2026, scheme: "dark" });
+ * console.log(svg.startsWith("<svg"));
+ * ```
+ */
 export function calendarIcon(options: Omit<CalendarIconOptions, "theme"> & { theme?: undefined }): string {
   return renderIcon(options, () => ["curl", theme]);
 }

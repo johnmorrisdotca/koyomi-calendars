@@ -3,9 +3,37 @@
 // (any theme, any option, `calendarIcon` from the whole library or from one theme alone), and it moves the sheet. The whole icon is the sheet.
 // `prefers-reduced-motion` is respected: the new date just appears.
 
+/**
+ * The four ways a page turns: `tear-down`, `fly-up`, `rip-corner` and `flip-down`.
+ * @example
+ * ```ts
+ * import { CALENDAR_FLIPS } from "@johnmorrisdotca/koyomi-calendars/animate";
+ *
+ * console.log(CALENDAR_FLIPS.join(", "));
+ * ```
+ */
 export const CALENDAR_FLIPS = ["tear-down", "fly-up", "rip-corner", "flip-down"] as const;
+/**
+ * One of the names in `CALENDAR_FLIPS`.
+ * @example
+ * ```ts
+ * import { CALENDAR_FLIP_LABELS, type CalendarFlip } from "@johnmorrisdotca/koyomi-calendars/animate";
+ *
+ * const flip: CalendarFlip = "rip-corner";
+ * console.log(CALENDAR_FLIP_LABELS[flip].en);
+ * ```
+ */
 export type CalendarFlip = (typeof CALENDAR_FLIPS)[number];
 
+/**
+ * Each flip's name for a picker, in English and in Japanese.
+ * @example
+ * ```ts
+ * import { CALENDAR_FLIP_LABELS } from "@johnmorrisdotca/koyomi-calendars/animate";
+ *
+ * console.log(CALENDAR_FLIP_LABELS["tear-down"].ja);
+ * ```
+ */
 export const CALENDAR_FLIP_LABELS: Record<CalendarFlip, { en: string; ja: string }> = {
   "tear-down": { en: "Tear down", ja: "下へちぎる" },
   "fly-up": { en: "Fly up", ja: "上へ飛ばす" },
@@ -13,6 +41,16 @@ export const CALENDAR_FLIP_LABELS: Record<CalendarFlip, { en: string; ja: string
   "flip-down": { en: "Flip down", ja: "下へめくる" },
 };
 
+/**
+ * A day to show or turn to: a year, a month 1 to 12 and a day of the month.
+ * @example
+ * ```ts
+ * import { nextDay, type FlipDate } from "@johnmorrisdotca/koyomi-calendars/animate";
+ *
+ * const today: FlipDate = { year: 2026, month: 11, day: 3 };
+ * console.log(nextDay(today));
+ * ```
+ */
 export interface FlipDate {
   year: number;
   month: number;
@@ -25,16 +63,64 @@ function at(date: FlipDate): Date {
   return d;
 }
 
-/** The date `days` after (or before, when negative) `date`: across months, years and leap days. */
+/**
+ * The date `days` after (or before, when negative) `date`: across months, years and leap days.
+ *
+ * @param date - The day to start from.
+ * @param days - How many days to add; negative goes back.
+ * @returns The day reached.
+ * @example
+ * ```ts
+ * import { addDays } from "@johnmorrisdotca/koyomi-calendars/animate";
+ *
+ * console.log(addDays({ year: 2028, month: 2, day: 28 }, 2));
+ * ```
+ */
 export function addDays(date: FlipDate, days: number): FlipDate {
   const d = at(date);
   d.setUTCDate(d.getUTCDate() + days);
   return { year: d.getUTCFullYear(), month: d.getUTCMonth() + 1, day: d.getUTCDate() };
 }
+/**
+ * The day after `date`.
+ *
+ * @param date - A year, month and day.
+ * @returns The next day, across the end of a month or a year.
+ * @example
+ * ```ts
+ * import { nextDay } from "@johnmorrisdotca/koyomi-calendars/animate";
+ *
+ * console.log(nextDay({ year: 2026, month: 12, day: 31 }));
+ * ```
+ */
 export const nextDay = (date: FlipDate): FlipDate => addDays(date, 1);
+/**
+ * The day before `date`.
+ *
+ * @param date - A year, month and day.
+ * @returns The previous day, across the start of a month or a year.
+ * @example
+ * ```ts
+ * import { previousDay } from "@johnmorrisdotca/koyomi-calendars/animate";
+ *
+ * console.log(previousDay({ year: 2026, month: 1, day: 1 }));
+ * ```
+ */
 export const previousDay = (date: FlipDate): FlipDate => addDays(date, -1);
 
-/** −1 when `to` is before `from`, 1 when after, 0 when the same day. */
+/**
+ * Which way a turn from one day to another goes.
+ *
+ * @param from - The day shown now.
+ * @param to - The day to turn to.
+ * @returns −1 when `to` is before `from`, 1 when after, 0 when the same day.
+ * @example
+ * ```ts
+ * import { compareDays } from "@johnmorrisdotca/koyomi-calendars/animate";
+ *
+ * console.log(compareDays({ year: 2026, month: 11, day: 3 }, { year: 2026, month: 11, day: 4 }));
+ * ```
+ */
 export function compareDays(from: FlipDate, to: FlipDate): -1 | 0 | 1 {
   const a = at(from).getTime();
   const b = at(to).getTime();
@@ -43,7 +129,15 @@ export function compareDays(from: FlipDate, to: FlipDate): -1 | 0 | 1 {
 
 type Frame = Record<string, string | number>;
 
-/** What the sheet does as it goes: from lying on the pad (the first frame) to gone (the last). */
+/**
+ * What the sheet does as it goes: from lying on the pad (the first frame) to gone (the last).
+ * @example
+ * ```ts
+ * import { FLIP_KEYFRAMES } from "@johnmorrisdotca/koyomi-calendars/animate";
+ *
+ * console.log(FLIP_KEYFRAMES["fly-up"].frames.length, FLIP_KEYFRAMES["fly-up"].easing);
+ * ```
+ */
 export const FLIP_KEYFRAMES: Record<CalendarFlip, { frames: Frame[]; origin: string; easing: string; perspective?: number }> = {
   "tear-down": {
     origin: "50% 0%",
@@ -84,6 +178,22 @@ export const FLIP_KEYFRAMES: Record<CalendarFlip, { frames: Frame[]; origin: str
   },
 };
 
+/**
+ * What `flipCalendar` takes: how to draw a date, the two dates, and how the page turns.
+ * @example
+ * ```ts
+ * import { calendarIcon } from "@johnmorrisdotca/koyomi-calendars";
+ * import type { FlipOptions } from "@johnmorrisdotca/koyomi-calendars/animate";
+ *
+ * const options: FlipOptions = {
+ *   render: (date) => calendarIcon({ theme: "pins", ...date }),
+ *   from: { year: 2026, month: 11, day: 3 },
+ *   to: { year: 2026, month: 11, day: 4 },
+ *   animation: "fly-up",
+ * };
+ * console.log(options.animation);
+ * ```
+ */
 export interface FlipOptions {
   /** Draws a date: it returns the SVG of an icon. `(d) => calendarIcon({ theme: "pins", ...d })`, or one theme's own `calendarIcon`. */
   render: (date: FlipDate) => string;
@@ -100,12 +210,42 @@ export interface FlipOptions {
 
 const running = new WeakMap<Element, { finish: () => void }>();
 
-/** Does the reader ask for less motion? */
+/**
+ * Does the reader ask for less motion?
+ *
+ * @returns `true` when the browser reports `prefers-reduced-motion: reduce`; `false` otherwise, and outside a browser.
+ * @example
+ * ```ts
+ * import { reducedMotion } from "@johnmorrisdotca/koyomi-calendars/animate";
+ *
+ * console.log(reducedMotion());
+ * ```
+ */
 export function reducedMotion(): boolean {
   return typeof matchMedia === "function" && matchMedia("(prefers-reduced-motion: reduce)").matches;
 }
 
-/** Turns the icon in `host` from one date to another and resolves with the date now shown. The host's content afterwards is the one new icon, as if drawn plainly. */
+/**
+ * Turns the icon in `host` from one date to another.
+ *
+ * It needs a browser (the Web Animations API). The host's content afterwards is the one new icon, as if drawn plainly.
+ *
+ * @param host - The element that holds the icon now.
+ * @param options - How to draw a date, the two dates and the animation: {@link FlipOptions}.
+ * @returns The date now shown, once the turn has finished (`options.to`).
+ * @example
+ * ```ts no-run
+ * import { calendarIcon } from "@johnmorrisdotca/koyomi-calendars";
+ * import { flipCalendar } from "@johnmorrisdotca/koyomi-calendars/animate";
+ *
+ * const host = document.querySelector<HTMLElement>("#today")!;
+ * await flipCalendar(host, {
+ *   render: (date) => calendarIcon({ theme: "pins", ...date }),
+ *   from: { year: 2026, month: 11, day: 3 },
+ *   to: { year: 2026, month: 11, day: 4 },
+ * });
+ * ```
+ */
 export async function flipCalendar(host: HTMLElement, options: FlipOptions): Promise<FlipDate> {
   const { render, from, to } = options;
   running.get(host)?.finish();

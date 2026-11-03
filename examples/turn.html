@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Turning the page, from jsDelivr</title>
+  </head>
+  <body>
+    <div id="today"></div>
+    <button type="button" id="next">Next day</button>
+    <script type="module">
+      import { calendarIcon } from "https://cdn.jsdelivr.net/npm/@johnmorrisdotca/koyomi-calendars/dist/themes/squircle.js";
+      import { flipCalendar, nextDay } from "https://cdn.jsdelivr.net/npm/@johnmorrisdotca/koyomi-calendars/dist/animate.js";
+
+      const host = document.querySelector("#today");
+      const now = new Date();
+      let shown = { year: now.getFullYear(), month: now.getMonth() + 1, day: now.getDate() };
+      host.innerHTML = calendarIcon(shown);
+
+      document.querySelector("#next").addEventListener("click", async () => {
+        shown = await flipCalendar(host, { render: (date) => calendarIcon(date), from: shown, to: nextDay(shown), animation: "fly-up" });
+      });
+    </script>
+  </body>
+</html>

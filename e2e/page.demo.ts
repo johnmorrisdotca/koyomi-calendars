@@ -83,12 +83,14 @@ test("the Japanese page draws the months in Japanese, the year before the month"
   await expect(page.locator("#months").getByText("歯医者 14:00").first()).toBeAttached();
 });
 
-test("the docs pages are one language each and link to their twin", async ({ page }) => {
-  await page.goto("/docs/icons.html");
-  await expect(page.locator("article h1")).toHaveText("Icons");
-  await page.locator('article a[href$="icons.html"]').first().click();
-  await expect(page).toHaveURL(/\/ja\/docs\/icons\.html$/);
-  await expect(page.locator("article h1")).toHaveText("アイコン");
+test("the docs link leads to the documentation site, in the page's language", async ({ page }) => {
+  await page.goto("/");
+  await page.locator('a[href="docs/index.html"]').first().click();
+  await expect(page).toHaveURL(/\/docs\/index\.html$/);
+  await expect(page.locator("html")).toHaveAttribute("lang", "en");
+  await page.goto("/ja/");
+  await page.locator('a[href="../docs/ja/index.html"]').first().click();
+  await expect(page).toHaveURL(/\/docs\/ja\/index\.html$/);
   await expect(page.locator("html")).toHaveAttribute("lang", "ja");
 });
 
@@ -96,6 +98,15 @@ test("no error is logged on either page", async ({ page }) => {
   const errors: string[] = [];
   page.on("pageerror", (e) => errors.push(String(e)));
   page.on("console", (m) => { if (m.type() === "error") errors.push(m.text()); });
-  for (const path of ["/", "/ja/", "/docs/month.html", "/ja/docs/month.html"]) await page.goto(path);
+  for (const path of ["/", "/ja/", "/embed.html", "/docs/index.html", "/docs/ja/index.html"]) await page.goto(path);
   expect(errors).toEqual([]);
+});
+
+test("the embed page draws what its address says, and nothing else", async ({ page }) => {
+  await page.goto("/embed.html?theme=squircle&date=2026-11-03&scheme=dark");
+  await expect(page.locator("#frame svg")).toHaveAttribute("aria-label", "Tuesday Nov 3 2026");
+  await page.goto("/embed.html?month=1&date=2026-11-03&design=desk&week=monday");
+  await expect(page.locator("#frame svg")).toHaveAttribute("aria-label", /November 2026/);
+  await page.goto("/embed.html?date=2026-13-03");
+  await expect(page.locator("#frame svg")).toHaveCount(0);
 });

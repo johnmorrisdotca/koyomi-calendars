@@ -8,3 +8,5 @@ playwright-report/
 .readme-examples/
 .DS_Store
 .env*
+.docs-examples/
+.usage/

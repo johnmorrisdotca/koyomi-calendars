@@ -4,7 +4,18 @@ import { renderIcon } from "../render.ts";
 
 const DESK: Rect = [52.5, 55.9, 123.2, 69.4];
 
-// a desk pad seen from an angle: coils, a red banner with a white number, a month of small dates.
+/**
+ * The `desk` design's drawing, for the package's own renderer: a desk pad seen from an angle: coils, a red banner with a white number, a month of small dates.
+ *
+ * Most code wants `calendarIcon` from this file instead, which draws with it.
+ *
+ * @example
+ * ```ts
+ * import { theme } from "@johnmorrisdotca/koyomi-calendars/themes/desk";
+ *
+ * console.log(theme.box.length);
+ * ```
+ */
 export const theme: Def = {
   box: [27, 14.6, 187, 233],
   numeral: "centre",
@@ -54,7 +65,19 @@ export const theme: Def = {
   },
 };
 
-/** The `desk` page alone: this theme and what it needs, nothing of the other themes. */
+/**
+ * Draws the `desk` calendar page alone: this theme and what it needs, nothing of the other themes.
+ *
+ * @param options - What the main `calendarIcon` takes, without `theme`: the date (`month`, `day`, `year`), `scheme`, `housing`, `rings`, `size` and the rest.
+ * @returns The icon as SVG text, `<svg …>…</svg>`.
+ * @example
+ * ```ts
+ * import { calendarIcon } from "@johnmorrisdotca/koyomi-calendars/themes/desk";
+ *
+ * const svg = calendarIcon({ month: 11, day: 3, year: 2026, scheme: "dark" });
+ * console.log(svg.startsWith("<svg"));
+ * ```
+ */
 export function calendarIcon(options: Omit<CalendarIconOptions, "theme"> & { theme?: undefined }): string {
   return renderIcon(options, () => ["desk", theme]);
 }

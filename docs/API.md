@@ -12,7 +12,7 @@ import { CALENDAR_HOUSINGS, CALENDAR_PRESETS, CALENDAR_THEME_ALIASES, CALENDAR_T
 
 ### CALENDAR_HOUSINGS
 
-*constant*
+*constant*. The housings an icon can sit in: `square` (the icon alone) and `circle` (on a coloured disc).
 
 ```ts
 const CALENDAR_HOUSINGS: readonly ["square", "circle"];
@@ -20,7 +20,7 @@ const CALENDAR_HOUSINGS: readonly ["square", "circle"];
 
 ### CALENDAR_PRESETS
 
-*constant*
+*constant*. The named looks: `flat`, `disc`, `ringed`, `tilted` and `disc-ringed`.
 
 ```ts
 const CALENDAR_PRESETS: {
@@ -56,7 +56,7 @@ const CALENDAR_THEME_ALIASES: Readonly<Record<string, CalendarTheme>>;
 
 ### CALENDAR_THEME_LABELS
 
-*constant*
+*constant*. Each design's name for a picker, in English and in Japanese.
 
 ```ts
 const CALENDAR_THEME_LABELS: Record<CalendarTheme, {
@@ -67,7 +67,7 @@ const CALENDAR_THEME_LABELS: Record<CalendarTheme, {
 
 ### CALENDAR_THEMES
 
-*constant*
+*constant*. The 18 designs, by name.
 
 ```ts
 const CALENDAR_THEMES: readonly ["pins", "loops", "shadow", "heavy", "cartoon", "flip", "stack", "line", "curl", "soft", "desk", "thin", "frame", "badge", "sun", "roll", "plain", "squircle"];
@@ -83,7 +83,7 @@ const CALENDAR_TURN_MAX = 45;
 
 ### CALENDAR_YEAR_CLEAR
 
-*constant*
+*constant*. The share of the drawing's width the year keeps clear of the bottom of its zone.
 
 ```ts
 const CALENDAR_YEAR_CLEAR = 0.03;
@@ -91,7 +91,7 @@ const CALENDAR_YEAR_CLEAR = 0.03;
 
 ### CALENDAR_YEAR_MIN
 
-*constant*. The year is never smaller than this share of the drawing's width (its font size), and keeps this share clear of the bottom of its zone.
+*constant*. The year is never smaller than this share of the drawing's width (its font size).
 
 ```ts
 const CALENDAR_YEAR_MIN = 0.07;
@@ -107,7 +107,7 @@ function calendarIcon(options: CalendarIconOptions): string;
 
 ### calendarLayout
 
-*function*. The box, the page and the year's room of a theme, with and without a year. A weekend page places its numerals on the diagonal, on purpose, the same for every weekend.
+*function*. The box, the page and the year's room of a theme, with and without a year.
 
 ```ts
 function calendarLayout(theme: CalendarTheme, withYear: boolean, weekend?: boolean): CalendarLayout & {
@@ -118,7 +118,7 @@ function calendarLayout(theme: CalendarTheme, withYear: boolean, weekend?: boole
 
 ### calendarMoon
 
-*function*. The phase of the moon at noon UTC on a date, in eighths of a lunation: 0 new, 2 first quarter, 4 full, 6 last quarter. A mean lunation from a known new moon, so it can be a day out near the turn of a phase.
+*function*. The phase of the moon at noon UTC on a date, in eighths of a lunation: 0 new, 2 first quarter, 4 full, 6 last quarter.
 
 ```ts
 function calendarMoon(year: number, month: number, day: number): number;
@@ -126,7 +126,7 @@ function calendarMoon(year: number, month: number, day: number): number;
 
 ### calendarPresetOf
 
-*function*. The named preset, or null when the word is not one of ours.
+*function*. Reads a preset's name.
 
 ```ts
 function calendarPresetOf(name: string | null | undefined): CalendarPreset | null;
@@ -134,7 +134,7 @@ function calendarPresetOf(name: string | null | undefined): CalendarPreset | nul
 
 ### calendarThemeOf
 
-*function*. The named theme (or an older name for one), or null when the word is not one of ours.
+*function*. Reads a design's name, or an older name for one.
 
 ```ts
 function calendarThemeOf(name: string | null | undefined): CalendarTheme | null;
@@ -142,7 +142,7 @@ function calendarThemeOf(name: string | null | undefined): CalendarTheme | null;
 
 ### calendarWeekend
 
-*function*. The Saturday and the Sunday of the weekend a date is in, or null for a weekday, a day the month does not have, or a weekend that runs outside years 1 to 9999. The Sunday may be in the next month or year.
+*function*. The Saturday and the Sunday of the weekend a date is in.
 
 ```ts
 function calendarWeekend(year: number, month: number, day: number): {
@@ -153,7 +153,7 @@ function calendarWeekend(year: number, month: number, day: number): {
 
 ### JAPANESE_HOLIDAY_YEARS
 
-*constant*. Where holidays are known: the years the rules below describe.
+*constant*. The first and last year the holiday rules describe.
 
 ```ts
 const JAPANESE_HOLIDAY_YEARS: readonly [number, number];
@@ -161,7 +161,7 @@ const JAPANESE_HOLIDAY_YEARS: readonly [number, number];
 
 ### japaneseHoliday
 
-*function*. The holiday of a day, in both languages, or null (a day with none, or a year the rules do not cover).
+*function*. The public holiday of a day, in both languages.
 
 ```ts
 function japaneseHoliday(year: number, month: number, dayOfMonth: number): JapaneseHoliday | null;
@@ -169,7 +169,7 @@ function japaneseHoliday(year: number, month: number, dayOfMonth: number): Japan
 
 ### japaneseHolidaysOf
 
-*function*. Every holiday of a year, by `YYYY-MM-DD`, for 2000 to 2099; null outside.
+*function*. Every public holiday of a year, computed from the law's rules.
 
 ```ts
 function japaneseHolidaysOf(year: number): ReadonlyMap<string, JapaneseHoliday> | null;
@@ -177,7 +177,7 @@ function japaneseHolidaysOf(year: number): ReadonlyMap<string, JapaneseHoliday> 
 
 ### OLD_CALENDAR_YEARS
 
-*constant*. The year range the astronomy is held to.
+*constant*. The first and last year the old-calendar astronomy is held to.
 
 ```ts
 const OLD_CALENDAR_YEARS: readonly [number, number];
@@ -185,7 +185,7 @@ const OLD_CALENDAR_YEARS: readonly [number, number];
 
 ### oldCalendarDate
 
-*function*. The old-calendar date of a Gregorian date, or null when the date is outside 1900 to 2100 or a new moon or principal term falls too near midnight in Japan to be sure.
+*function*. The old-calendar date of a Gregorian date, from the new moons and the sun's longitude.
 
 ```ts
 function oldCalendarDate(year: number, month: number, dayOfMonth: number): OldDate | null;
@@ -201,7 +201,7 @@ const ROKUYO: readonly Rokuyo[];
 
 ### rokuyoOf
 
-*function*. The rokuyō of a Gregorian date, or null where the old calendar date is not sure.
+*function*. The day of the six-day cycle (`六曜`, rokuyō) of a Gregorian date.
 
 ```ts
 function rokuyoOf(year: number, month: number, dayOfMonth: number): Rokuyo | null;
@@ -209,7 +209,7 @@ function rokuyoOf(year: number, month: number, dayOfMonth: number): Rokuyo | nul
 
 ### CalendarDate
 
-*interface*
+*interface*. A day on the calendar: a four-digit year, a month 1 to 12 and a day of the month.
 
 ```ts
 interface CalendarDate {
@@ -221,7 +221,7 @@ interface CalendarDate {
 
 ### CalendarHousing
 
-*type*
+*type*. One of the housings in `CALENDAR_HOUSINGS`.
 
 ```ts
 type CalendarHousing = (typeof CALENDAR_HOUSINGS)[number];
@@ -229,7 +229,7 @@ type CalendarHousing = (typeof CALENDAR_HOUSINGS)[number];
 
 ### CalendarIconOptions
 
-*interface*
+*interface*. What `calendarIcon` takes: the date, the design and the look of one calendar page.
 
 ```ts
 interface CalendarIconOptions {
@@ -303,7 +303,7 @@ interface CalendarLayout {
 
 ### CalendarLook
 
-*interface*
+*interface*. The three options a preset sets: a housing, rings and a turn.
 
 ```ts
 interface CalendarLook {
@@ -315,7 +315,7 @@ interface CalendarLook {
 
 ### CalendarPreset
 
-*type*
+*type*. One of the names in `CALENDAR_PRESETS`.
 
 ```ts
 type CalendarPreset = keyof typeof CALENDAR_PRESETS;
@@ -323,7 +323,7 @@ type CalendarPreset = keyof typeof CALENDAR_PRESETS;
 
 ### CalendarTheme
 
-*type*
+*type*. One of the names in `CALENDAR_THEMES`.
 
 ```ts
 type CalendarTheme = (typeof CALENDAR_THEMES)[number];
@@ -331,7 +331,7 @@ type CalendarTheme = (typeof CALENDAR_THEMES)[number];
 
 ### JapaneseHoliday
 
-*interface*. The Japanese calendar facts a date page can show, computed and never looked up: the public holidays (`国民の祝日`, kokumin no shukujitsu), the old calendar date
+*interface*. A Japanese public holiday's name, in Japanese and in English.
 
 ```ts
 interface JapaneseHoliday {
@@ -342,7 +342,7 @@ interface JapaneseHoliday {
 
 ### OldDate
 
-*interface*
+*interface*. A date of the old Japanese calendar (`旧暦`, kyūreki): a month 1 to 12, a day, and whether the month is a leap month.
 
 ```ts
 interface OldDate {
@@ -356,7 +356,7 @@ interface OldDate {
 
 ### Rokuyo
 
-*interface*
+*interface*. One day of the six-day cycle (`六曜`, rokuyō): its name, its reading and an English gloss.
 
 ```ts
 interface Rokuyo {
@@ -376,7 +376,7 @@ import { JAPANESE_HOLIDAY_YEARS, japaneseHoliday, japaneseHolidaysOf, OLD_CALEND
 
 ### JAPANESE_HOLIDAY_YEARS
 
-*constant*. Where holidays are known: the years the rules below describe.
+*constant*. The first and last year the holiday rules describe.
 
 ```ts
 const JAPANESE_HOLIDAY_YEARS: readonly [number, number];
@@ -384,7 +384,7 @@ const JAPANESE_HOLIDAY_YEARS: readonly [number, number];
 
 ### japaneseHoliday
 
-*function*. The holiday of a day, in both languages, or null (a day with none, or a year the rules do not cover).
+*function*. The public holiday of a day, in both languages.
 
 ```ts
 function japaneseHoliday(year: number, month: number, dayOfMonth: number): JapaneseHoliday | null;
@@ -392,7 +392,7 @@ function japaneseHoliday(year: number, month: number, dayOfMonth: number): Japan
 
 ### japaneseHolidaysOf
 
-*function*. Every holiday of a year, by `YYYY-MM-DD`, for 2000 to 2099; null outside.
+*function*. Every public holiday of a year, computed from the law's rules.
 
 ```ts
 function japaneseHolidaysOf(year: number): ReadonlyMap<string, JapaneseHoliday> | null;
@@ -400,7 +400,7 @@ function japaneseHolidaysOf(year: number): ReadonlyMap<string, JapaneseHoliday> 
 
 ### OLD_CALENDAR_YEARS
 
-*constant*. The year range the astronomy is held to.
+*constant*. The first and last year the old-calendar astronomy is held to.
 
 ```ts
 const OLD_CALENDAR_YEARS: readonly [number, number];
@@ -408,7 +408,7 @@ const OLD_CALENDAR_YEARS: readonly [number, number];
 
 ### oldCalendarDate
 
-*function*. The old-calendar date of a Gregorian date, or null when the date is outside 1900 to 2100 or a new moon or principal term falls too near midnight in Japan to be sure.
+*function*. The old-calendar date of a Gregorian date, from the new moons and the sun's longitude.
 
 ```ts
 function oldCalendarDate(year: number, month: number, dayOfMonth: number): OldDate | null;
@@ -424,7 +424,7 @@ const ROKUYO: readonly Rokuyo[];
 
 ### rokuyoOf
 
-*function*. The rokuyō of a Gregorian date, or null where the old calendar date is not sure.
+*function*. The day of the six-day cycle (`六曜`, rokuyō) of a Gregorian date.
 
 ```ts
 function rokuyoOf(year: number, month: number, dayOfMonth: number): Rokuyo | null;
@@ -432,7 +432,7 @@ function rokuyoOf(year: number, month: number, dayOfMonth: number): Rokuyo | nul
 
 ### JapaneseHoliday
 
-*interface*. The Japanese calendar facts a date page can show, computed and never looked up: the public holidays (`国民の祝日`, kokumin no shukujitsu), the old calendar date
+*interface*. A Japanese public holiday's name, in Japanese and in English.
 
 ```ts
 interface JapaneseHoliday {
@@ -443,7 +443,7 @@ interface JapaneseHoliday {
 
 ### OldDate
 
-*interface*
+*interface*. A date of the old Japanese calendar (`旧暦`, kyūreki): a month 1 to 12, a day, and whether the month is a leap month.
 
 ```ts
 interface OldDate {
@@ -457,7 +457,7 @@ interface OldDate {
 
 ### Rokuyo
 
-*interface*
+*interface*. One day of the six-day cycle (`六曜`, rokuyō): its name, its reading and an English gloss.
 
 ```ts
 interface Rokuyo {
@@ -485,7 +485,7 @@ const CALENDAR_THEME_ALIASES: Readonly<Record<string, CalendarTheme>>;
 
 ### CALENDAR_THEME_LABELS
 
-*constant*
+*constant*. Each design's name for a picker, in English and in Japanese.
 
 ```ts
 const CALENDAR_THEME_LABELS: Record<CalendarTheme, {
@@ -496,7 +496,7 @@ const CALENDAR_THEME_LABELS: Record<CalendarTheme, {
 
 ### CALENDAR_THEMES
 
-*constant*
+*constant*. The 18 designs, by name.
 
 ```ts
 const CALENDAR_THEMES: readonly ["pins", "loops", "shadow", "heavy", "cartoon", "flip", "stack", "line", "curl", "soft", "desk", "thin", "frame", "badge", "sun", "roll", "plain", "squircle"];
@@ -504,7 +504,7 @@ const CALENDAR_THEMES: readonly ["pins", "loops", "shadow", "heavy", "cartoon", 
 
 ### CALENDAR_YEAR_CLEAR
 
-*constant*
+*constant*. The share of the drawing's width the year keeps clear of the bottom of its zone.
 
 ```ts
 const CALENDAR_YEAR_CLEAR = 0.03;
@@ -512,7 +512,7 @@ const CALENDAR_YEAR_CLEAR = 0.03;
 
 ### CALENDAR_YEAR_MIN
 
-*constant*. The year is never smaller than this share of the drawing's width (its font size), and keeps this share clear of the bottom of its zone.
+*constant*. The year is never smaller than this share of the drawing's width (its font size).
 
 ```ts
 const CALENDAR_YEAR_MIN = 0.07;
@@ -520,7 +520,7 @@ const CALENDAR_YEAR_MIN = 0.07;
 
 ### calendarThemeOf
 
-*function*. The named theme (or an older name for one), or null when the word is not one of ours.
+*function*. Reads a design's name, or an older name for one.
 
 ```ts
 function calendarThemeOf(name: string | null | undefined): CalendarTheme | null;
@@ -528,7 +528,7 @@ function calendarThemeOf(name: string | null | undefined): CalendarTheme | null;
 
 ### CalendarTheme
 
-*type*
+*type*. One of the names in `CALENDAR_THEMES`.
 
 ```ts
 type CalendarTheme = (typeof CALENDAR_THEMES)[number];
@@ -552,7 +552,7 @@ function daysInMonth(year: number, month: number): number;
 
 ### MONTH_DESIGN_LABELS
 
-*constant*
+*constant*. Each month design's name for a picker, in English and in Japanese.
 
 ```ts
 const MONTH_DESIGN_LABELS: Record<MonthDesign, {
@@ -563,7 +563,7 @@ const MONTH_DESIGN_LABELS: Record<MonthDesign, {
 
 ### MONTH_DESIGNS
 
-*constant*
+*constant*. The four month designs: a wall `poster`, a memo `board`, a spiral-bound `wall` page and a `desk` pad.
 
 ```ts
 const MONTH_DESIGNS: readonly ["poster", "board", "wall", "desk"];
@@ -571,7 +571,7 @@ const MONTH_DESIGNS: readonly ["poster", "board", "wall", "desk"];
 
 ### monthCalendar
 
-*function*. A whole month as an SVG.
+*function*. A whole month as an SVG: a wall poster, a memo board, a spiral-bound wall page or a desk pad.
 
 ```ts
 function monthCalendar(options: MonthCalendarOptions): string;
@@ -587,7 +587,7 @@ function monthGrid(year: number, month: number, weekStart?: WeekStart): MonthGri
 
 ### MonthCalendarOptions
 
-*interface*
+*interface*. What `monthCalendar` takes: the month, the design and the look of one month page.
 
 ```ts
 interface MonthCalendarOptions {
@@ -616,7 +616,7 @@ interface MonthCalendarOptions {
 
 ### MonthDay
 
-*interface*
+*interface*. One cell of a month grid: a date, its weekday, and whether it belongs to the month.
 
 ```ts
 interface MonthDay {
@@ -632,7 +632,7 @@ interface MonthDay {
 
 ### MonthDesign
 
-*type*
+*type*. One of the names in `MONTH_DESIGNS`.
 
 ```ts
 type MonthDesign = (typeof MONTH_DESIGNS)[number];
@@ -640,7 +640,7 @@ type MonthDesign = (typeof MONTH_DESIGNS)[number];
 
 ### MonthGrid
 
-*interface*
+*interface*. The weeks of a month: whole weeks of seven days.
 
 ```ts
 interface MonthGrid {
@@ -657,7 +657,7 @@ interface MonthGrid {
 
 ### WeekStart
 
-*type*
+*type*. The first column of a month: `"sunday"` or `"monday"`.
 
 ```ts
 type WeekStart = "sunday" | "monday";
@@ -681,7 +681,7 @@ function addDays(date: FlipDate, days: number): FlipDate;
 
 ### CALENDAR_FLIP_LABELS
 
-*constant*
+*constant*. Each flip's name for a picker, in English and in Japanese.
 
 ```ts
 const CALENDAR_FLIP_LABELS: Record<CalendarFlip, {
@@ -692,7 +692,7 @@ const CALENDAR_FLIP_LABELS: Record<CalendarFlip, {
 
 ### CALENDAR_FLIPS
 
-*constant*
+*constant*. The four ways a page turns: `tear-down`, `fly-up`, `rip-corner` and `flip-down`.
 
 ```ts
 const CALENDAR_FLIPS: readonly ["tear-down", "fly-up", "rip-corner", "flip-down"];
@@ -700,7 +700,7 @@ const CALENDAR_FLIPS: readonly ["tear-down", "fly-up", "rip-corner", "flip-down"
 
 ### compareDays
 
-*function*. −1 when `to` is before `from`, 1 when after, 0 when the same day.
+*function*. Which way a turn from one day to another goes.
 
 ```ts
 function compareDays(from: FlipDate, to: FlipDate): -1 | 0 | 1;
@@ -721,7 +721,7 @@ const FLIP_KEYFRAMES: Record<CalendarFlip, {
 
 ### flipCalendar
 
-*function*. Turns the icon in `host` from one date to another and resolves with the date now shown. The host's content afterwards is the one new icon, as if drawn plainly.
+*function*. Turns the icon in `host` from one date to another.
 
 ```ts
 function flipCalendar(host: HTMLElement, options: FlipOptions): Promise<FlipDate>;
@@ -729,7 +729,7 @@ function flipCalendar(host: HTMLElement, options: FlipOptions): Promise<FlipDate
 
 ### nextDay
 
-*constant*
+*constant*. The day after `date`.
 
 ```ts
 const nextDay: (date: FlipDate) => FlipDate;
@@ -737,7 +737,7 @@ const nextDay: (date: FlipDate) => FlipDate;
 
 ### previousDay
 
-*constant*
+*constant*. The day before `date`.
 
 ```ts
 const previousDay: (date: FlipDate) => FlipDate;
@@ -753,7 +753,7 @@ function reducedMotion(): boolean;
 
 ### CalendarFlip
 
-*type*
+*type*. One of the names in `CALENDAR_FLIPS`.
 
 ```ts
 type CalendarFlip = (typeof CALENDAR_FLIPS)[number];
@@ -761,7 +761,7 @@ type CalendarFlip = (typeof CALENDAR_FLIPS)[number];
 
 ### FlipDate
 
-*interface*
+*interface*. A day to show or turn to: a year, a month 1 to 12 and a day of the month.
 
 ```ts
 interface FlipDate {
@@ -773,7 +773,7 @@ interface FlipDate {
 
 ### FlipOptions
 
-*interface*
+*interface*. What `flipCalendar` takes: how to draw a date, the two dates, and how the page turns.
 
 ```ts
 interface FlipOptions {
@@ -801,7 +801,7 @@ import { calendarIcon, theme } from '@johnmorrisdotca/koyomi-calendars/themes/pi
 
 ### calendarIcon
 
-*function*. The `pins` page alone: this theme and what it needs, nothing of the other themes.
+*function*. Draws the `pins` calendar page alone: this theme and what it needs, nothing of the other themes.
 
 ```ts
 function calendarIcon(options: Omit<CalendarIconOptions, "theme"> & {
@@ -811,7 +811,7 @@ function calendarIcon(options: Omit<CalendarIconOptions, "theme"> & {
 
 ### theme
 
-*constant*
+*constant*. The `pins` design's drawing, for the package's own renderer: flat page, red header, two slate pins through white holes.
 
 ```ts
 const theme: Def;
@@ -827,7 +827,7 @@ import { calendarIcon, theme } from '@johnmorrisdotca/koyomi-calendars/themes/lo
 
 ### calendarIcon
 
-*function*. The `loops` page alone: this theme and what it needs, nothing of the other themes.
+*function*. Draws the `loops` calendar page alone: this theme and what it needs, nothing of the other themes.
 
 ```ts
 function calendarIcon(options: Omit<CalendarIconOptions, "theme"> & {
@@ -837,7 +837,7 @@ function calendarIcon(options: Omit<CalendarIconOptions, "theme"> & {
 
 ### theme
 
-*constant*
+*constant*. The `loops` design's drawing, for the package's own renderer: grey outline, grey header, three ring pins.
 
 ```ts
 const theme: Def;
@@ -853,7 +853,7 @@ import { calendarIcon, theme } from '@johnmorrisdotca/koyomi-calendars/themes/sh
 
 ### calendarIcon
 
-*function*. The `shadow` page alone: this theme and what it needs, nothing of the other themes.
+*function*. Draws the `shadow` calendar page alone: this theme and what it needs, nothing of the other themes.
 
 ```ts
 function calendarIcon(options: Omit<CalendarIconOptions, "theme"> & {
@@ -863,7 +863,7 @@ function calendarIcon(options: Omit<CalendarIconOptions, "theme"> & {
 
 ### theme
 
-*constant*
+*constant*. The `shadow` design's drawing, for the package's own renderer: blue header with black coils, a circled day, a long shadow on a lavender tile.
 
 ```ts
 const theme: Def;
@@ -879,7 +879,7 @@ import { calendarIcon, theme } from '@johnmorrisdotca/koyomi-calendars/themes/he
 
 ### calendarIcon
 
-*function*. The `heavy` page alone: this theme and what it needs, nothing of the other themes.
+*function*. Draws the `heavy` calendar page alone: this theme and what it needs, nothing of the other themes.
 
 ```ts
 function calendarIcon(options: Omit<CalendarIconOptions, "theme"> & {
@@ -889,7 +889,7 @@ function calendarIcon(options: Omit<CalendarIconOptions, "theme"> & {
 
 ### theme
 
-*constant*
+*constant*. The `heavy` design's drawing, for the package's own renderer: heavy black outline, ring slots over the top edge, black header rule.
 
 ```ts
 const theme: Def;
@@ -905,7 +905,7 @@ import { calendarIcon, theme } from '@johnmorrisdotca/koyomi-calendars/themes/ca
 
 ### calendarIcon
 
-*function*. The `cartoon` page alone: this theme and what it needs, nothing of the other themes.
+*function*. Draws the `cartoon` calendar page alone: this theme and what it needs, nothing of the other themes.
 
 ```ts
 function calendarIcon(options: Omit<CalendarIconOptions, "theme"> & {
@@ -915,7 +915,7 @@ function calendarIcon(options: Omit<CalendarIconOptions, "theme"> & {
 
 ### theme
 
-*constant*
+*constant*. The `cartoon` design's drawing, for the package's own renderer: black cartoon outline, pink header, white ring loops, bold glossy word and number.
 
 ```ts
 const theme: Def;
@@ -931,7 +931,7 @@ import { calendarIcon, theme } from '@johnmorrisdotca/koyomi-calendars/themes/fl
 
 ### calendarIcon
 
-*function*. The `flip` page alone: this theme and what it needs, nothing of the other themes.
+*function*. Draws the `flip` calendar page alone: this theme and what it needs, nothing of the other themes.
 
 ```ts
 function calendarIcon(options: Omit<CalendarIconOptions, "theme"> & {
@@ -941,7 +941,7 @@ function calendarIcon(options: Omit<CalendarIconOptions, "theme"> & {
 
 ### theme
 
-*constant*
+*constant*. The `flip` design's drawing, for the package's own renderer: a flip calendar in perspective: coils, a pale header, a slanted number, a fan of pages.
 
 ```ts
 const theme: Def;
@@ -957,7 +957,7 @@ import { calendarIcon, theme } from '@johnmorrisdotca/koyomi-calendars/themes/st
 
 ### calendarIcon
 
-*function*. The `stack` page alone: this theme and what it needs, nothing of the other themes.
+*function*. Draws the `stack` calendar page alone: this theme and what it needs, nothing of the other themes.
 
 ```ts
 function calendarIcon(options: Omit<CalendarIconOptions, "theme"> & {
@@ -967,7 +967,7 @@ function calendarIcon(options: Omit<CalendarIconOptions, "theme"> & {
 
 ### theme
 
-*constant*
+*constant*. The `stack` design's drawing, for the package's own renderer: solid black glyph with a tilted white page, a curled corner and a sheet underneath.
 
 ```ts
 const theme: Def;
@@ -983,7 +983,7 @@ import { calendarIcon, theme } from '@johnmorrisdotca/koyomi-calendars/themes/li
 
 ### calendarIcon
 
-*function*. The `line` page alone: this theme and what it needs, nothing of the other themes.
+*function*. Draws the `line` calendar page alone: this theme and what it needs, nothing of the other themes.
 
 ```ts
 function calendarIcon(options: Omit<CalendarIconOptions, "theme"> & {
@@ -993,7 +993,7 @@ function calendarIcon(options: Omit<CalendarIconOptions, "theme"> & {
 
 ### theme
 
-*constant*
+*constant*. The `line` design's drawing, for the package's own renderer: black line art, a header rule, four tick marks and a big blue number.
 
 ```ts
 const theme: Def;
@@ -1009,7 +1009,7 @@ import { calendarIcon, theme } from '@johnmorrisdotca/koyomi-calendars/themes/cu
 
 ### calendarIcon
 
-*function*. The `curl` page alone: this theme and what it needs, nothing of the other themes.
+*function*. Draws the `curl` calendar page alone: this theme and what it needs, nothing of the other themes.
 
 ```ts
 function calendarIcon(options: Omit<CalendarIconOptions, "theme"> & {
@@ -1019,7 +1019,7 @@ function calendarIcon(options: Omit<CalendarIconOptions, "theme"> & {
 
 ### theme
 
-*constant*
+*constant*. The `curl` design's drawing, for the package's own renderer: line art with an orange header, two hooks, thin rounded digits and a curled lower corner.
 
 ```ts
 const theme: Def;
@@ -1035,7 +1035,7 @@ import { calendarIcon, theme } from '@johnmorrisdotca/koyomi-calendars/themes/so
 
 ### calendarIcon
 
-*function*. The `soft` page alone: this theme and what it needs, nothing of the other themes.
+*function*. Draws the `soft` calendar page alone: this theme and what it needs, nothing of the other themes.
 
 ```ts
 function calendarIcon(options: Omit<CalendarIconOptions, "theme"> & {
@@ -1045,7 +1045,7 @@ function calendarIcon(options: Omit<CalendarIconOptions, "theme"> & {
 
 ### theme
 
-*constant*
+*constant*. The `soft` design's drawing, for the package's own renderer: flat red-orange header, three amber rings, a cream page with a side shade and a rounded coral number.
 
 ```ts
 const theme: Def;
@@ -1061,7 +1061,7 @@ import { calendarIcon, theme } from '@johnmorrisdotca/koyomi-calendars/themes/de
 
 ### calendarIcon
 
-*function*. The `desk` page alone: this theme and what it needs, nothing of the other themes.
+*function*. Draws the `desk` calendar page alone: this theme and what it needs, nothing of the other themes.
 
 ```ts
 function calendarIcon(options: Omit<CalendarIconOptions, "theme"> & {
@@ -1071,7 +1071,7 @@ function calendarIcon(options: Omit<CalendarIconOptions, "theme"> & {
 
 ### theme
 
-*constant*
+*constant*. The `desk` design's drawing, for the package's own renderer: a desk pad seen from an angle: coils, a red banner with a white number, a month of small dates.
 
 ```ts
 const theme: Def;
@@ -1087,7 +1087,7 @@ import { calendarIcon, theme } from '@johnmorrisdotca/koyomi-calendars/themes/th
 
 ### calendarIcon
 
-*function*. The `thin` page alone: this theme and what it needs, nothing of the other themes.
+*function*. Draws the `thin` calendar page alone: this theme and what it needs, nothing of the other themes.
 
 ```ts
 function calendarIcon(options: Omit<CalendarIconOptions, "theme"> & {
@@ -1097,7 +1097,7 @@ function calendarIcon(options: Omit<CalendarIconOptions, "theme"> & {
 
 ### theme
 
-*constant*
+*constant*. The `thin` design's drawing, for the package's own renderer: a plain white page, the weekday in red and a very thin number.
 
 ```ts
 const theme: Def;
@@ -1113,7 +1113,7 @@ import { calendarIcon, theme } from '@johnmorrisdotca/koyomi-calendars/themes/fr
 
 ### calendarIcon
 
-*function*. The `frame` page alone: this theme and what it needs, nothing of the other themes.
+*function*. Draws the `frame` calendar page alone: this theme and what it needs, nothing of the other themes.
 
 ```ts
 function calendarIcon(options: Omit<CalendarIconOptions, "theme"> & {
@@ -1123,7 +1123,7 @@ function calendarIcon(options: Omit<CalendarIconOptions, "theme"> & {
 
 ### theme
 
-*constant*
+*constant*. The `frame` design's drawing, for the package's own renderer: four coloured sides round a pale square with a blue number, a folded corner at the bottom right.
 
 ```ts
 const theme: Def;
@@ -1139,7 +1139,7 @@ import { calendarIcon, theme } from '@johnmorrisdotca/koyomi-calendars/themes/ba
 
 ### calendarIcon
 
-*function*. The `badge` page alone: this theme and what it needs, nothing of the other themes.
+*function*. Draws the `badge` calendar page alone: this theme and what it needs, nothing of the other themes.
 
 ```ts
 function calendarIcon(options: Omit<CalendarIconOptions, "theme"> & {
@@ -1149,7 +1149,7 @@ function calendarIcon(options: Omit<CalendarIconOptions, "theme"> & {
 
 ### theme
 
-*constant*
+*constant*. The `badge` design's drawing, for the package's own renderer: a white tile and a soft blue page with a light top lip and a white number.
 
 ```ts
 const theme: Def;
@@ -1165,7 +1165,7 @@ import { calendarIcon, theme } from '@johnmorrisdotca/koyomi-calendars/themes/su
 
 ### calendarIcon
 
-*function*. The `sun` page alone: this theme and what it needs, nothing of the other themes.
+*function*. Draws the `sun` calendar page alone: this theme and what it needs, nothing of the other themes.
 
 ```ts
 function calendarIcon(options: Omit<CalendarIconOptions, "theme"> & {
@@ -1175,7 +1175,7 @@ function calendarIcon(options: Omit<CalendarIconOptions, "theme"> & {
 
 ### theme
 
-*constant*
+*constant*. The `sun` design's drawing, for the package's own renderer: a square tear-off page: a grey strip to tear off by, a huge black day over a red disc (a slot for any mark), side columns for the weekday, month and holiday.
 
 ```ts
 const theme: Def;
@@ -1191,7 +1191,7 @@ import { calendarIcon, theme } from '@johnmorrisdotca/koyomi-calendars/themes/ro
 
 ### calendarIcon
 
-*function*. The `roll` page alone: this theme and what it needs, nothing of the other themes.
+*function*. Draws the `roll` calendar page alone: this theme and what it needs, nothing of the other themes.
 
 ```ts
 function calendarIcon(options: Omit<CalendarIconOptions, "theme"> & {
@@ -1201,7 +1201,7 @@ function calendarIcon(options: Omit<CalendarIconOptions, "theme"> & {
 
 ### theme
 
-*constant*
+*constant*. The `roll` design's drawing, for the package's own renderer: a tall wall tear-off page: the pages already torn off curl above, a huge condensed day in the ink of its weekday, side columns, a dotted memo area.
 
 ```ts
 const theme: Def;
@@ -1217,7 +1217,7 @@ import { calendarIcon, theme } from '@johnmorrisdotca/koyomi-calendars/themes/sq
 
 ### calendarIcon
 
-*function*. The `squircle` page alone: this theme and what it needs, nothing of the other themes.
+*function*. Draws the `squircle` calendar page alone: this theme and what it needs, nothing of the other themes.
 
 ```ts
 function calendarIcon(options: Omit<CalendarIconOptions, "theme"> & {
@@ -1227,7 +1227,7 @@ function calendarIcon(options: Omit<CalendarIconOptions, "theme"> & {
 
 ### theme
 
-*constant*
+*constant*. The `squircle` design's drawing, for the package's own renderer: a soft rounded-square tile in a teal-to-blue gradient, a white page with a coloured top band and two binding tabs, a large bold day.
 
 ```ts
 const theme: Def;
@@ -1243,7 +1243,7 @@ import { calendarIcon, theme } from '@johnmorrisdotca/koyomi-calendars/themes/pl
 
 ### calendarIcon
 
-*function*. The `plain` page alone: this theme and what it needs, nothing of the other themes.
+*function*. Draws the `plain` calendar page alone: this theme and what it needs, nothing of the other themes.
 
 ```ts
 function calendarIcon(options: Omit<CalendarIconOptions, "theme"> & {
@@ -1253,7 +1253,7 @@ function calendarIcon(options: Omit<CalendarIconOptions, "theme"> & {
 
 ### theme
 
-*constant*
+*constant*. The `plain` design's drawing, for the package's own renderer: a plain, unbranded tear-off pad on a kraft stand: a small month, a big day, the weekday in capitals, the month and year, the moon.
 
 ```ts
 const theme: Def;

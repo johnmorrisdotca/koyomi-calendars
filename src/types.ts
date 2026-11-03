@@ -4,6 +4,18 @@ import type { CalendarTheme } from "./names.ts";
 import type { CalendarHousing } from "./frame.ts";
 import type { CalendarPreset } from "./presets.ts";
 
+/**
+ * What `calendarIcon` takes: the date, the design and the look of one calendar page.
+ *
+ * Only `month` and `day` are required.
+ * @example
+ * ```ts
+ * import { calendarIcon, type CalendarIconOptions } from "@johnmorrisdotca/koyomi-calendars";
+ *
+ * const options: CalendarIconOptions = { month: 7, day: 17, year: 2026, theme: "badge", scheme: "light" };
+ * console.log(calendarIcon(options).length > 100);
+ * ```
+ */
 export interface CalendarIconOptions {
   /** Month 1–12. */
   month: number;
@@ -60,7 +72,16 @@ export interface Parts {
 /** x, y, width, height, in the drawing's own units. */
 export type Rect = readonly [x: number, y: number, width: number, height: number];
 
-/** Where a theme puts the day and the year; a theme's `layout` says it once and the drawing and the tests both read it. */
+/**
+ * Where a theme puts the day and the year; a theme's `layout` says it once and the drawing and the tests both read it.
+ * @example
+ * ```ts
+ * import { calendarLayout, type CalendarLayout } from "@johnmorrisdotca/koyomi-calendars";
+ *
+ * const layout: CalendarLayout = calendarLayout("pins", false);
+ * console.log(layout.page.join(" "));
+ * ```
+ */
 export interface CalendarLayout {
   /** The page the day is centred in, across and (as one block with the month word and the year, when the page shares them) down. */
   page: Rect;

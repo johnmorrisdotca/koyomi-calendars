@@ -4,7 +4,18 @@ import { renderIcon } from "../render.ts";
 
 const SQUIRCLE: Rect = [44, 118, 168, 94];
 
-// a soft rounded-square tile in a teal-to-blue gradient, a white page with a coloured top band and two binding tabs, a large bold day.
+/**
+ * The `squircle` design's drawing, for the package's own renderer: a soft rounded-square tile in a teal-to-blue gradient, a white page with a coloured top band and two binding tabs, a large bold day.
+ *
+ * Most code wants `calendarIcon` from this file instead, which draws with it.
+ *
+ * @example
+ * ```ts
+ * import { theme } from "@johnmorrisdotca/koyomi-calendars/themes/squircle";
+ *
+ * console.log(theme.box.length);
+ * ```
+ */
 export const theme: Def = {
   box: [0, 0, 256, 256],
   numeral: "centre",
@@ -34,7 +45,19 @@ export const theme: Def = {
   },
 };
 
-/** The `squircle` page alone: this theme and what it needs, nothing of the other themes. */
+/**
+ * Draws the `squircle` calendar page alone: this theme and what it needs, nothing of the other themes.
+ *
+ * @param options - What the main `calendarIcon` takes, without `theme`: the date (`month`, `day`, `year`), `scheme`, `housing`, `rings`, `size` and the rest.
+ * @returns The icon as SVG text, `<svg …>…</svg>`.
+ * @example
+ * ```ts
+ * import { calendarIcon } from "@johnmorrisdotca/koyomi-calendars/themes/squircle";
+ *
+ * const svg = calendarIcon({ month: 11, day: 3, year: 2026, scheme: "dark" });
+ * console.log(svg.startsWith("<svg"));
+ * ```
+ */
 export function calendarIcon(options: Omit<CalendarIconOptions, "theme"> & { theme?: undefined }): string {
   return renderIcon(options, () => ["squircle", theme]);
 }

@@ -9,7 +9,18 @@ const flipPage = (top: number, bottom: number): Rect => {
   return [flipLeft(mid), top, flipRight(mid) - flipLeft(mid), bottom - top];
 };
 
-// a flip calendar in perspective: coils, a pale header, a slanted number, a fan of pages.
+/**
+ * The `flip` design's drawing, for the package's own renderer: a flip calendar in perspective: coils, a pale header, a slanted number, a fan of pages.
+ *
+ * Most code wants `calendarIcon` from this file instead, which draws with it.
+ *
+ * @example
+ * ```ts
+ * import { theme } from "@johnmorrisdotca/koyomi-calendars/themes/flip";
+ *
+ * console.log(theme.box.length);
+ * ```
+ */
 export const theme: Def = {
   box: [52, 78, 340, 262],
   numeral: "centre",
@@ -40,7 +51,19 @@ export const theme: Def = {
   },
 };
 
-/** The `flip` page alone: this theme and what it needs, nothing of the other themes. */
+/**
+ * Draws the `flip` calendar page alone: this theme and what it needs, nothing of the other themes.
+ *
+ * @param options - What the main `calendarIcon` takes, without `theme`: the date (`month`, `day`, `year`), `scheme`, `housing`, `rings`, `size` and the rest.
+ * @returns The icon as SVG text, `<svg …>…</svg>`.
+ * @example
+ * ```ts
+ * import { calendarIcon } from "@johnmorrisdotca/koyomi-calendars/themes/flip";
+ *
+ * const svg = calendarIcon({ month: 11, day: 3, year: 2026, scheme: "dark" });
+ * console.log(svg.startsWith("<svg"));
+ * ```
+ */
 export function calendarIcon(options: Omit<CalendarIconOptions, "theme"> & { theme?: undefined }): string {
   return renderIcon(options, () => ["flip", theme]);
 }

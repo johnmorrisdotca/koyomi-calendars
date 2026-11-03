@@ -19,6 +19,16 @@
  * Rokuyō: 先勝, 友引, 先負, 仏滅, 大安, 赤口 by (old month + old day) mod 6 (the month number of a leap month is that of the month before it).
  */
 
+/**
+ * A Japanese public holiday's name, in Japanese and in English.
+ * @example
+ * ```ts
+ * import { japaneseHoliday, type JapaneseHoliday } from "@johnmorrisdotca/koyomi-calendars/japanese";
+ *
+ * const day: JapaneseHoliday | null = japaneseHoliday(2026, 1, 1);
+ * console.log(day?.en);
+ * ```
+ */
 export interface JapaneseHoliday { readonly ja: string; readonly en: string }
 
 const NAMES = {
@@ -45,7 +55,15 @@ const NAMES = {
   enthronement: { ja: "即位礼正殿の儀の行われる日", en: "Enthronement Ceremony Day" },
 } as const satisfies Record<string, JapaneseHoliday>;
 
-/** Where holidays are known: the years the rules below describe. */
+/**
+ * The first and last year the holiday rules describe.
+ * @example
+ * ```ts
+ * import { JAPANESE_HOLIDAY_YEARS } from "@johnmorrisdotca/koyomi-calendars/japanese";
+ *
+ * console.log(JAPANESE_HOLIDAY_YEARS);
+ * ```
+ */
 export const JAPANESE_HOLIDAY_YEARS: readonly [number, number] = [2000, 2099];
 
 const day = (year: number, month: number, d: number): number => Date.UTC(year, month - 1, d) / 86400000;
@@ -66,7 +84,19 @@ function equinox(year: number, autumn: boolean): number {
 
 const cache = new Map<number, Map<string, JapaneseHoliday>>();
 
-/** Every holiday of a year, by `YYYY-MM-DD`, for 2000 to 2099; null outside. */
+/**
+ * Every public holiday of a year, computed from the law's rules.
+ *
+ * @param year - Four-digit year, 2000 to 2099.
+ * @returns A map from `YYYY-MM-DD` to the holiday, or `null` for a year outside 2000 to 2099.
+ * @example
+ * ```ts
+ * import { japaneseHolidaysOf } from "@johnmorrisdotca/koyomi-calendars/japanese";
+ *
+ * const holidays = japaneseHolidaysOf(2026);
+ * console.log(holidays?.size, holidays?.get("2026-01-01")?.en);
+ * ```
+ */
 export function japaneseHolidaysOf(year: number): ReadonlyMap<string, JapaneseHoliday> | null {
   if (!Number.isInteger(year) || year < JAPANESE_HOLIDAY_YEARS[0] || year > JAPANESE_HOLIDAY_YEARS[1]) return null;
   const known = cache.get(year);
@@ -115,7 +145,21 @@ export function japaneseHolidaysOf(year: number): ReadonlyMap<string, JapaneseHo
   return out;
 }
 
-/** The holiday of a day, in both languages, or null (a day with none, or a year the rules do not cover). */
+/**
+ * The public holiday of a day, in both languages.
+ *
+ * @param year - Four-digit year.
+ * @param month - Month 1 to 12.
+ * @param dayOfMonth - Day of the month.
+ * @returns The holiday, or `null` for a day with none or a year the rules do not cover.
+ * @example
+ * ```ts
+ * import { japaneseHoliday } from "@johnmorrisdotca/koyomi-calendars/japanese";
+ *
+ * console.log(japaneseHoliday(2026, 1, 1)?.ja);
+ * console.log(japaneseHoliday(2026, 1, 2));
+ * ```
+ */
 export function japaneseHoliday(year: number, month: number, dayOfMonth: number): JapaneseHoliday | null {
   const holidays = japaneseHolidaysOf(year);
   if (!holidays) return null;
@@ -215,6 +259,16 @@ function termJst(target: number, nearJde: number): Moment {
   return { days: jstDays(toUt(jde, year)) };
 }
 
+/**
+ * A date of the old Japanese calendar (旧暦, kyūreki): a month 1 to 12, a day, and whether the month is a leap month.
+ * @example
+ * ```ts
+ * import { oldCalendarDate, type OldDate } from "@johnmorrisdotca/koyomi-calendars/japanese";
+ *
+ * const old: OldDate | null = oldCalendarDate(2026, 11, 3);
+ * console.log(old);
+ * ```
+ */
 export interface OldDate {
   /** 1 to 12. */
   readonly month: number;
@@ -223,12 +277,33 @@ export interface OldDate {
   readonly leap: boolean;
 }
 
-/** The year range the astronomy is held to. */
+/**
+ * The first and last year the old-calendar astronomy is held to.
+ * @example
+ * ```ts
+ * import { OLD_CALENDAR_YEARS } from "@johnmorrisdotca/koyomi-calendars/japanese";
+ *
+ * console.log(OLD_CALENDAR_YEARS);
+ * ```
+ */
 export const OLD_CALENDAR_YEARS: readonly [number, number] = [1900, 2100];
 
 const CHUUKI_MONTH: Readonly<Record<number, number>> = { 330: 1, 0: 2, 30: 3, 60: 4, 90: 5, 120: 6, 150: 7, 180: 8, 210: 9, 240: 10, 270: 11, 300: 12 };
 
-/** The old-calendar date of a Gregorian date, or null when the date is outside 1900 to 2100 or a new moon or principal term falls too near midnight in Japan to be sure. */
+/**
+ * The old-calendar date of a Gregorian date, from the new moons and the sun's longitude.
+ *
+ * @param year - Four-digit year.
+ * @param month - Month 1 to 12.
+ * @param dayOfMonth - Day of the month.
+ * @returns The old month, day and whether the month is a leap month, or `null` when the date is outside 1900 to 2100 or a new moon or principal term falls too near midnight in Japan to be sure.
+ * @example
+ * ```ts
+ * import { oldCalendarDate } from "@johnmorrisdotca/koyomi-calendars/japanese";
+ *
+ * console.log(oldCalendarDate(2026, 11, 3));
+ * ```
+ */
 export function oldCalendarDate(year: number, month: number, dayOfMonth: number): OldDate | null {
   if (!Number.isInteger(year) || year < OLD_CALENDAR_YEARS[0] || year > OLD_CALENDAR_YEARS[1]) return null;
   const target = day(year, month, dayOfMonth);
@@ -292,9 +367,27 @@ export function oldCalendarDate(year: number, month: number, dayOfMonth: number)
 
 // ---------- rokuyō ----------
 
+/**
+ * One day of the six-day cycle (六曜, rokuyō): its name, its reading and an English gloss.
+ * @example
+ * ```ts
+ * import { rokuyoOf, type Rokuyo } from "@johnmorrisdotca/koyomi-calendars/japanese";
+ *
+ * const day: Rokuyo | null = rokuyoOf(2026, 11, 3);
+ * console.log(day?.ja, day?.reading);
+ * ```
+ */
 export interface Rokuyo { readonly ja: string; readonly reading: string; readonly en: string }
 
-/** The six days in order of (old month + old day) mod 6, with the reading and an English gloss. */
+/**
+ * The six days in order of (old month + old day) mod 6, with the reading and an English gloss.
+ * @example
+ * ```ts
+ * import { ROKUYO } from "@johnmorrisdotca/koyomi-calendars/japanese";
+ *
+ * console.log(ROKUYO.map((day) => day.ja).join(" "));
+ * ```
+ */
 export const ROKUYO: readonly Rokuyo[] = [
   { ja: "大安", reading: "Taian", en: "Taian (very lucky)" },
   { ja: "赤口", reading: "Shakkō", en: "Shakkō (unlucky except at noon)" },
@@ -304,7 +397,20 @@ export const ROKUYO: readonly Rokuyo[] = [
   { ja: "仏滅", reading: "Butsumetsu", en: "Butsumetsu (unlucky)" },
 ];
 
-/** The rokuyō of a Gregorian date, or null where the old calendar date is not sure. */
+/**
+ * The day of the six-day cycle (六曜, rokuyō) of a Gregorian date.
+ *
+ * @param year - Four-digit year.
+ * @param month - Month 1 to 12.
+ * @param dayOfMonth - Day of the month.
+ * @returns The day, or `null` where the old calendar date is not sure.
+ * @example
+ * ```ts
+ * import { rokuyoOf } from "@johnmorrisdotca/koyomi-calendars/japanese";
+ *
+ * console.log(rokuyoOf(2026, 11, 3)?.en);
+ * ```
+ */
 export function rokuyoOf(year: number, month: number, dayOfMonth: number): Rokuyo | null {
   const old = oldCalendarDate(year, month, dayOfMonth);
   return old ? ROKUYO[(old.month + old.day) % 6]! : null;

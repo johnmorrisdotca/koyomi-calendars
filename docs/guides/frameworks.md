@@ -42,56 +42,73 @@ The date is read by your code, once, and passed in. `innerHTML` is safe for what
 
 ## React
 
-```jsx
-import { calendarIcon } from "@johnmorrisdotca/koyomi-calendars";
+```tsx
+import { calendarIcon, type CalendarTheme } from "@johnmorrisdotca/koyomi-calendars";
 
-export function DayIcon({ date, theme = "squircle" }) {
+export function DayIcon({ date, theme = "squircle" }: { date: Date; theme?: CalendarTheme }) {
   const svg = calendarIcon({ theme, month: date.getMonth() + 1, day: date.getDate(), year: date.getFullYear() });
   return <span role="img" aria-label={date.toDateString()} dangerouslySetInnerHTML={{ __html: svg }} />;
 }
 ```
 
-The SVG already has `role="img"` and an `aria-label`. If the wrapper repeats it, hide one from assistive technology rather than reading the date twice.
+The SVG already has `role="img"` and an `aria-label`. If the wrapper repeats it, as this one does for the date's long form, hide one from assistive technology rather than reading the date twice. The component draws the same string on a server, so it works with server rendering.
 
 ## Vue 3
 
 ```vue
-<script setup>
+<script setup lang="ts">
 import { computed } from "vue";
-import { monthCalendar } from "@johnmorrisdotca/koyomi-calendars/month";
+import { calendarIcon, type CalendarTheme } from "@johnmorrisdotca/koyomi-calendars";
 
-const props = defineProps({ year: Number, month: Number });
-const svg = computed(() => monthCalendar({ year: props.year, month: props.month, design: "board" }));
+const props = withDefaults(defineProps<{ date: Date; theme?: CalendarTheme }>(), { theme: "squircle" });
+const svg = computed(() => calendarIcon({ theme: props.theme, month: props.date.getMonth() + 1, day: props.date.getDate(), year: props.date.getFullYear() }));
 </script>
-<template><div v-html="svg" /></template>
+
+<template><span v-html="svg" /></template>
+```
+
+```ts no-check
+import { createApp } from "vue";
+import DayIcon from "./DayIcon.vue";
+
+createApp(DayIcon, { date: new Date() }).mount("#app");
 ```
 
 ## Svelte
 
 ```svelte
-<script>
-  import { calendarIcon } from "@johnmorrisdotca/koyomi-calendars";
-  export let month;
-  export let day;
-  $: svg = calendarIcon({ theme: "pins", month, day });
+<script lang="ts">
+  import { calendarIcon, type CalendarTheme } from "@johnmorrisdotca/koyomi-calendars";
+
+  let { date, theme = "squircle" }: { date: Date; theme?: CalendarTheme } = $props();
+  const svg = $derived(calendarIcon({ theme, month: date.getMonth() + 1, day: date.getDate(), year: date.getFullYear() }));
 </script>
-{@html svg}
+
+<span>{@html svg}</span>
 ```
 
 ## Angular
 
 ```ts no-check
-import { Component, Input } from "@angular/core";
-import { DomSanitizer, SafeHtml } from "@angular/platform-browser";
+import { Component, Input, inject, type OnChanges } from "@angular/core";
+import { DomSanitizer, type SafeHtml } from "@angular/platform-browser";
 import { calendarIcon } from "@johnmorrisdotca/koyomi-calendars";
 
 @Component({ selector: "app-day-icon", standalone: true, template: `<span [innerHTML]="svg"></span>` })
-export class DayIconComponent {
-  svg: SafeHtml;
-  @Input() set date(value: Date) {
-    this.svg = this.sanitizer.bypassSecurityTrustHtml(calendarIcon({ month: value.getMonth() + 1, day: value.getDate(), year: value.getFullYear() }));
+export class DayIconComponent implements OnChanges {
+  private readonly sanitizer = inject(DomSanitizer);
+  @Input() date = new Date();
+  svg: SafeHtml = this.draw();
+
+  ngOnChanges(): void {
+    this.svg = this.draw();
   }
-  constructor(private sanitizer: DomSanitizer) {}
+
+  private draw(): SafeHtml {
+    const { date } = this;
+    // The string holds only what the package drew, so it is trusted. Never build `mark` from user input.
+    return this.sanitizer.bypassSecurityTrustHtml(calendarIcon({ month: date.getMonth() + 1, day: date.getDate(), year: date.getFullYear() }));
+  }
 }
 ```
 

@@ -8,7 +8,18 @@ const ROLL_NUMERAL = { h: 190, sw: 20, year: 23, gap: 14, split: { h: 98, dx: 48
 const ROLL_LEFT: Rect = [16, 82, 44, 248];
 const ROLL_RIGHT: Rect = [260, 82, 44, 248];
 
-// a tall wall tear-off page: the pages already torn off curl above, a huge condensed day in the ink of its weekday, side columns, a dotted memo area.
+/**
+ * The `roll` design's drawing, for the package's own renderer: a tall wall tear-off page: the pages already torn off curl above, a huge condensed day in the ink of its weekday, side columns, a dotted memo area.
+ *
+ * Most code wants `calendarIcon` from this file instead, which draws with it.
+ *
+ * @example
+ * ```ts
+ * import { theme } from "@johnmorrisdotca/koyomi-calendars/themes/roll";
+ *
+ * console.log(theme.box.length);
+ * ```
+ */
 export const theme: Def = {
   box: [0, 0, 320, 450],
   numeral: "centre",
@@ -43,7 +54,19 @@ export const theme: Def = {
   },
 };
 
-/** The `roll` page alone: this theme and what it needs, nothing of the other themes. */
+/**
+ * Draws the `roll` calendar page alone: this theme and what it needs, nothing of the other themes.
+ *
+ * @param options - What the main `calendarIcon` takes, without `theme`: the date (`month`, `day`, `year`), `scheme`, `housing`, `rings`, `size` and the rest.
+ * @returns The icon as SVG text, `<svg …>…</svg>`.
+ * @example
+ * ```ts
+ * import { calendarIcon } from "@johnmorrisdotca/koyomi-calendars/themes/roll";
+ *
+ * const svg = calendarIcon({ month: 11, day: 3, year: 2026, scheme: "dark" });
+ * console.log(svg.startsWith("<svg"));
+ * ```
+ */
 export function calendarIcon(options: Omit<CalendarIconOptions, "theme"> & { theme?: undefined }): string {
   return renderIcon(options, () => ["roll", theme]);
 }

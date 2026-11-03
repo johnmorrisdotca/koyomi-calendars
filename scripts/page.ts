@@ -1,6 +1,5 @@
 // The pages: the demo and each doc, once in English and once in Japanese. A page is one language; the header's language picker goes to the same page in the other.
 import { readFileSync } from "node:fs";
-import { markdown } from "./docs-site.ts";
 import { WORDS, type Lang } from "./words.ts";
 
 interface Family {
@@ -33,7 +32,7 @@ function scripts(lang: Lang, root: string, here: string, entry: string | null): 
   );
 }
 
-/** The address of the same page in the other language, from this one's. `here` is the path under the language's folder (`index.html`, `docs/icons.html`). */
+/** The address of the same page in the other language, from this one's. `here` is the path under the language's folder (`index.html`, `builder.html`). */
 function otherUrl(lang: Lang, root: string, here: string): string {
   // `root` is the way up to the site's top from this page (the Japanese pages sit one folder down, in ja/).
   return lang === "ja" ? `${root}${here}` : `${root}ja/${here}`;
@@ -52,7 +51,7 @@ export function renderDemo(lang: Lang, sizeRows: string): string {
   let body = readFileSync(new URL("../demo/index.html", import.meta.url), "utf8");
   body = body.slice(body.indexOf("<!--family:header-->") + "<!--family:header-->".length, body.indexOf("<!--family:footer-->"));
   body = body.replace("{{sizeRows}}", sizeRows).replace(/\{\{(\w+)\}\}/g, (whole, key: string) => (key in w && typeof (w as Record<string, unknown>)[key] === "string" ? ((w as unknown as Record<string, string>)[key] as string) : whole));
-  const links = [{ href: "builder.html", say: "builderLink" }, { href: "docs/index.html", say: "docs" }];
+  const links = [{ href: "builder.html", say: "builderLink" }, { href: lang === "ja" ? "../docs/ja/index.html" : "docs/index.html", say: "docs" }];
   return shell(lang, root, "index.html", w.title, w.description, links, body, "demo.js");
 }
 
@@ -63,17 +62,6 @@ export function renderBuilder(lang: Lang): string {
   let body = readFileSync(new URL("../demo/builder.html", import.meta.url), "utf8");
   body = body.slice(body.indexOf("<!--family:header-->") + "<!--family:header-->".length, body.indexOf("<!--family:footer-->"));
   body = body.replace(/\{\{(\w+)\}\}/g, (whole, key: string) => (key in w && typeof (w as Record<string, unknown>)[key] === "string" ? ((w as unknown as Record<string, string>)[key] as string) : whole));
-  const links = [{ href: "index.html", say: "demoLink" }, { href: "docs/index.html", say: "docs" }];
+  const links = [{ href: "index.html", say: "demoLink" }, { href: lang === "ja" ? "../docs/ja/index.html" : "docs/index.html", say: "docs" }];
   return shell(lang, root, "builder.html", w.builderTitle, w.builderDescription, links, body, "builder.js");
-}
-
-/** A docs page from its Markdown. `name` is the file's name without `.md`, `.ja.md`. */
-export function renderDoc(lang: Lang, name: string, source: string): string {
-  const root = lang === "ja" ? "../../" : "../";
-  const w = WORDS[lang];
-  const first = /^# (.+)$/m.exec(source)?.[1] ?? name;
-  // The two pages of a pair link to each other at the top of their Markdown; on the site that is the same page in the other language's folder.
-  const twinned = lang === "en" ? source.replace(/\(([\w-]+)\.ja\.md\)/g, "(../ja/docs/$1.html)") : source.replace(/\(([\w-]+)\.md\)/g, "(../../docs/$1.html)");
-  const body = `<article class="doc">${markdown(twinned)}</article>`;
-  return shell(lang, root, `docs/${name}.html`, `${first.replace(/`/g, "")} · Koyomi Calendars`, w.description, [{ href: "../index.html", say: "demoLink" }], body, null);
 }

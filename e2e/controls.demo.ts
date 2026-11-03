@@ -1,7 +1,7 @@
 // No control is left in the browser's own style: every visible button, select, checkbox, radio and field has a border, a ground or a shape of its own, in light and in dark.
 import { expect, test, type Page } from "@playwright/test";
 
-const PAGES = ["/", "/ja/", "/docs/index.html"] as const;
+const PAGES = ["/", "/ja/", "/docs/index.html", "/docs/ja/index.html"] as const;
 const SCHEMES = ["light", "dark"] as const;
 
 /** Visible controls that still look as the browser draws them: the same border, ground and corners as a fresh, unstyled control of the same kind. */

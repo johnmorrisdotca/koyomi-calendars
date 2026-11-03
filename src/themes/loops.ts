@@ -4,7 +4,18 @@ import { renderIcon } from "../render.ts";
 
 const LOOPS: Rect = [59.5, 158.5, 210, 134];
 
-// grey outline, grey header, three ring pins.
+/**
+ * The `loops` design's drawing, for the package's own renderer: grey outline, grey header, three ring pins.
+ *
+ * Most code wants `calendarIcon` from this file instead, which draws with it.
+ *
+ * @example
+ * ```ts
+ * import { theme } from "@johnmorrisdotca/koyomi-calendars/themes/loops";
+ *
+ * console.log(theme.box.length);
+ * ```
+ */
 export const theme: Def = {
   box: [29.5, 33, 270, 285],
   numeral: "centre",
@@ -31,7 +42,19 @@ export const theme: Def = {
   },
 };
 
-/** The `loops` page alone: this theme and what it needs, nothing of the other themes. */
+/**
+ * Draws the `loops` calendar page alone: this theme and what it needs, nothing of the other themes.
+ *
+ * @param options - What the main `calendarIcon` takes, without `theme`: the date (`month`, `day`, `year`), `scheme`, `housing`, `rings`, `size` and the rest.
+ * @returns The icon as SVG text, `<svg …>…</svg>`.
+ * @example
+ * ```ts
+ * import { calendarIcon } from "@johnmorrisdotca/koyomi-calendars/themes/loops";
+ *
+ * const svg = calendarIcon({ month: 11, day: 3, year: 2026, scheme: "dark" });
+ * console.log(svg.startsWith("<svg"));
+ * ```
+ */
 export function calendarIcon(options: Omit<CalendarIconOptions, "theme"> & { theme?: undefined }): string {
   return renderIcon(options, () => ["loops", theme]);
 }

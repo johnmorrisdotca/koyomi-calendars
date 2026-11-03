@@ -4,7 +4,18 @@ import { renderIcon } from "../render.ts";
 
 const LINE: Rect = [83, 120.5, 206, 146.5];
 
-// black line art, a header rule, four tick marks and a big blue number.
+/**
+ * The `line` design's drawing, for the package's own renderer: black line art, a header rule, four tick marks and a big blue number.
+ *
+ * Most code wants `calendarIcon` from this file instead, which draws with it.
+ *
+ * @example
+ * ```ts
+ * import { theme } from "@johnmorrisdotca/koyomi-calendars/themes/line";
+ *
+ * console.log(theme.box.length);
+ * ```
+ */
 export const theme: Def = {
   box: [56, 40, 260, 255],
   numeral: "centre",
@@ -29,7 +40,19 @@ export const theme: Def = {
   },
 };
 
-/** The `line` page alone: this theme and what it needs, nothing of the other themes. */
+/**
+ * Draws the `line` calendar page alone: this theme and what it needs, nothing of the other themes.
+ *
+ * @param options - What the main `calendarIcon` takes, without `theme`: the date (`month`, `day`, `year`), `scheme`, `housing`, `rings`, `size` and the rest.
+ * @returns The icon as SVG text, `<svg …>…</svg>`.
+ * @example
+ * ```ts
+ * import { calendarIcon } from "@johnmorrisdotca/koyomi-calendars/themes/line";
+ *
+ * const svg = calendarIcon({ month: 11, day: 3, year: 2026, scheme: "dark" });
+ * console.log(svg.startsWith("<svg"));
+ * ```
+ */
 export function calendarIcon(options: Omit<CalendarIconOptions, "theme"> & { theme?: undefined }): string {
   return renderIcon(options, () => ["line", theme]);
 }

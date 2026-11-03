@@ -1,0 +1,15 @@
+{
+  "job": "calendar-page icons as SVG",
+  "pitch": {
+    "en": "Calendar pages as SVG: a day as an icon in 18 original designs, a whole month as a poster or a desk pad, and the page turning from one day to the next.",
+    "ja": "カレンダーのページをSVGで描きます。1日を18種類のアイコンで、1か月をポスターや卓上カレンダーで、そして日めくりも使えます。"
+  },
+  "name": {
+    "en": "Koyomi is the Japanese word 暦 for the calendar.",
+    "ja": "「暦」(こよみ) は、カレンダーのことです。"
+  },
+  "icon": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%23f4efe6'/%3E%3Crect x='18' y='20' width='64' height='62' rx='10' fill='%23fff' stroke='%23c0392b' stroke-width='4'/%3E%3Cpath d='M18 40h64' stroke='%23c0392b' stroke-width='4'/%3E%3Cpath d='M34 12v14M66 12v14' stroke='%23333' stroke-width='6' stroke-linecap='round'/%3E%3Ctext x='50' y='72' font-size='28' text-anchor='middle' font-family='sans-serif' font-weight='700' fill='%23333'%3E17%3C/text%3E%3C/svg%3E",
+  "entries": {
+    ".": { "en": "Calendar icons", "ja": "カレンダーアイコン", "platform": "neutral" }
+  }
+}

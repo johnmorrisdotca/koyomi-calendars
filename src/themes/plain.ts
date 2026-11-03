@@ -17,7 +17,18 @@ function moonGlyph(cx: number, cy: number, r: number, phase: number, ink: string
   return outline + (phase < 4 ? lit : `<g transform="translate(${r2(cx)} 0) scale(-1 1) translate(${r2(-cx)} 0)">${lit}</g>`);
 }
 
-// a plain, unbranded tear-off pad on a kraft stand: a small month, a big day, the weekday in capitals, the month and year, the moon.
+/**
+ * The `plain` design's drawing, for the package's own renderer: a plain, unbranded tear-off pad on a kraft stand: a small month, a big day, the weekday in capitals, the month and year, the moon.
+ *
+ * Most code wants `calendarIcon` from this file instead, which draws with it.
+ *
+ * @example
+ * ```ts
+ * import { theme } from "@johnmorrisdotca/koyomi-calendars/themes/plain";
+ *
+ * console.log(theme.box.length);
+ * ```
+ */
 export const theme: Def = {
   box: [0, 0, 300, 380],
   numeral: "centre",
@@ -59,7 +70,19 @@ export const theme: Def = {
   },
 };
 
-/** The `plain` page alone: this theme and what it needs, nothing of the other themes. */
+/**
+ * Draws the `plain` calendar page alone: this theme and what it needs, nothing of the other themes.
+ *
+ * @param options - What the main `calendarIcon` takes, without `theme`: the date (`month`, `day`, `year`), `scheme`, `housing`, `rings`, `size` and the rest.
+ * @returns The icon as SVG text, `<svg …>…</svg>`.
+ * @example
+ * ```ts
+ * import { calendarIcon } from "@johnmorrisdotca/koyomi-calendars/themes/plain";
+ *
+ * const svg = calendarIcon({ month: 11, day: 3, year: 2026, scheme: "dark" });
+ * console.log(svg.startsWith("<svg"));
+ * ```
+ */
 export function calendarIcon(options: Omit<CalendarIconOptions, "theme"> & { theme?: undefined }): string {
   return renderIcon(options, () => ["plain", theme]);
 }
