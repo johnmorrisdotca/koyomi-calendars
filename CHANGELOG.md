@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.1.1] - 2026-11-03
+
+### Fixed
+
+- **`squircle`: the year keeps the family's room.** With a year, the year sat 4.5 of 256 units from the bottom of its page; the family rule asks for 3% of the width (7.7). The day is drawn at 80 instead of 90 when a year is shown (90 without one), so the year ends 8.4 units above the page's bottom. A test holds it.
+
 ## [0.1.0] - 2026-11-02
 
 First release. The calendar-page icons of meigen-sports 0.19, moved here to be a package of their own.

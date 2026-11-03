@@ -289,3 +289,14 @@ test("the sun's disc is a slot: a mark replaces it, and anything that could run 
     assert.throws(() => calendarIcon({ theme: "sun", month: 3, day: 20, mark: bad }), /mark/, bad);
   }
 });
+
+test("the squircle's year keeps the family's room (3% of the width) above the bottom of its page", () => {
+  const { yearZone, box } = calendarLayout("squircle", true);
+  for (const scheme of ["light", "dark"] as const) {
+    for (const day of [1, 9, 30, 31]) {
+      const svg = calendarIcon({ theme: "squircle", month: 10, day, year: 2026, scheme });
+      const baseline = Number(/data-part="year"><text x="[\d.]+" y="([\d.]+)"/.exec(svg)![1]);
+      assert.ok(yearZone![1] + yearZone![3] - baseline >= 0.03 * box[2], `${scheme} ${day}: the year's baseline ${baseline} is too near the bottom`);
+    }
+  }
+});
