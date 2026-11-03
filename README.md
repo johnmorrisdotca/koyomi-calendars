@@ -1,3 +1,5 @@
+<p align="center"><a href="https://johnmorrisdotca.github.io/koyomi-calendars/"><picture><source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/johnmorrisdotca/koyomi-calendars/main/docs/images/thumbnail-dark.png"><img src="https://raw.githubusercontent.com/johnmorrisdotca/koyomi-calendars/main/docs/images/thumbnail.png" alt="Koyomi Calendars: five designs of a calendar-page icon for 17 July 2026 in a row, the squircle design largest in the middle." width="1200"></picture></a></p>
+
 <p align="center"><img src="docs/images/hero.png" alt="The squircle calendar icon on a flat tile, on a disc, with rings, tilted, and on a disc with rings, in light and dark" width="720"></p>
 
 # Koyomi Calendars <sub>暦</sub>
