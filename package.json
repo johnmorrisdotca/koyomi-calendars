@@ -1,6 +1,6 @@
 {
   "name": "@johnmorrisdotca/koyomi-calendars",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "Koyomi 暦: calendar-page icons as SVG, 18 original designs in light and dark, in any language through Intl. No image, no font, no dependency; import one design alone for a few kilobytes.",
   "keywords": [
     "calendar",

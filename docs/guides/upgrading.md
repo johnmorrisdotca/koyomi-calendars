@@ -9,6 +9,10 @@ description: What changed in each version that you must act on, how to move from
 
 Koyomi Calendars is in early development (0.x), so a minor version can add to the interface. This page lists only what asks something of you. The complete, dated record is the [changelog](../../CHANGELOG.md).
 
+## To 0.2.0
+
+Nothing asks anything of you: no drawing changed, and no option was added or removed. Every export now has a documentation page on the [documentation site](https://johnmorrisdotca.github.io/koyomi-calendars/docs/) with a runnable example, there is an embed page for an iframe (`embed.html` on the demo site), and four new guides cover Vite and webpack, a plain page with a CDN, the iframe, and TypeScript and Node. If you read the old docs pages on the demo site (`docs/icons.html` and the others), they are now the guides on the documentation site; the Markdown files are still in the repository.
+
 ## To 0.1.1
 
 One design changed, for a reason of layout. With a year, the `squircle` icon's year sat 4.5 of 256 units from the bottom of its page; the family rule asks for 3% of the width (7.7). The day is now drawn at 80 instead of 90 when a year is shown (90 without one), so the year ends 8.4 units above the page's bottom. If you compare `squircle` output byte for byte (a snapshot test, say), update the snapshot. No other design changed, and the first seventeen are still held byte-identical to meigen-sports 0.19.2.

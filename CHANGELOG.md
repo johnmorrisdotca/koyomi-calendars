@@ -2,6 +2,20 @@
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-11-03
+
+### Added
+
+- **A documentation site**, `scripts/docs-site.mjs` (the family's): a page for every export with its signature, parameters and a runnable example, the guides in English and Japanese, search and `llms.txt`, at https://johnmorrisdotca.github.io/koyomi-calendars/docs/. Every export now has a TSDoc summary, `@param`, `@returns` and an `@example` that runs when the site is built. This replaces the demo's small Markdown reader (`scripts/docs-site.ts`); the old pages `docs/*.md` stay in the repository.
+- **An embed page**, `embed.html` on the demo site: a page made for an iframe that draws what its address says (`date`, `theme`, `scheme`, `preset`, `housing`, `rings`, `turn`, `locale`, `japanese`, or a whole month with `month=1`, `design` and `week`).
+- **Every way of using the package, written and tested**: `examples/` (a CDN, jsDelivr and unpkg, turning the page, an iframe, Vite, webpack, React, Vue, Svelte, Angular, TypeScript, Node) and `pnpm test:usage`, which builds or runs each against the package as npm packs it, opens the pages in a browser, and checks the guides hold the same text. It runs in CI. Four new guides, each with its Japanese page: Vite and webpack, plain HTML and a CDN, embed it with an iframe, TypeScript and Node.
+- **The family's must-have check**, `scripts/check-standard.mjs`, held by `test/standard.test.ts`.
+
+### Changed
+
+- The demo moves to `@johnmorrisdotca/kazoku-ui` ^0.12 (the header's language picker and theme switch).
+- `pnpm docs:check` now checks the documentation site (every export's TSDoc and example, every guide's front matter and links, and runs every example); the check of `docs/API.md` and the Japanese twins is `pnpm docs:api:check`. The Docs workflow runs both.
+- The demo's Docs link goes to the documentation site, and to its Japanese pages from the Japanese demo.
 - The README opens with the package's thumbnail, and the demo carries it as its link preview (og:image) and publishes the card, a dark card and an icon on Pages at `thumbnail.png`, `thumbnail-dark.png` and `icon.png`.
 
 ### Documentation
