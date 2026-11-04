@@ -100,4 +100,4 @@ await flipCalendar(element, { render: (date) => calendarIcon({ ...date }), from,
 - Months: [Month pages](month-pages.md). Page turning: [Turning the page](turning-the-page.md).
 - Japanese holidays, old calendar and the six-day cycle: [The Japanese calendar](japanese-calendar.md).
 - Using it from React, Vue, Svelte, Angular or a server: [Frameworks and servers](frameworks.md).
-- Try it with your eyes: the [demo](https://johnmorrisdotca.github.io/koyomi-calendars/) and the [builder](https://johnmorrisdotca.github.io/koyomi-calendars/builder.html).
+- Try it with your eyes: the [demo](https://johnmorrisdotca.github.io/koyomi-calendars/) and the [builder](https://johnmorrisdotca.github.io/koyomi-calendars/builder.html). Both end in the family's "Put it in your page" panel: the code for a page, one design alone, a file on a server, plain HTML, React, Vue, Angular, Svelte and an iframe, at four sizes, with the picture beside it.

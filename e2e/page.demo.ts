@@ -49,19 +49,43 @@ test("the gallery has all 18 designs, light and dark, and a tap puts one on the 
   await page.locator('#gallery .tile[data-theme="roll"]').click();
   await expect(page).toHaveURL(/theme=roll/);
   await expect(page.locator('#gallery .tile[data-theme="roll"]')).toHaveAttribute("aria-pressed", "true");
-  await expect(page.locator("#code-draw")).toContainText("themes/roll");
+  await expect(page.locator('#embed-panel [part="code"]')).toContainText("themes/roll");
 });
 
-test("the code to copy matches the choices, and Copy answers", async ({ page, context }) => {
+test("the code to copy matches the choices, and Copy answers", async ({ page, context }, testInfo) => {
   await context.grantPermissions(["clipboard-read", "clipboard-write"]).catch(() => undefined);
   await page.goto("/?date=2026-07-17&theme=squircle&housing=circle&turn=-8");
-  const code = page.locator("#code-draw");
+  const code = page.locator('#embed-panel [part="code"]');
   await expect(code).toContainText('from "@johnmorrisdotca/koyomi-calendars/themes/squircle"');
   await expect(code).toContainText('housing: "circle"');
   await expect(code).toContainText("turn: -8");
   await expect(code).toContainText("month: 7, day: 17, year: 2026");
-  await page.locator('[data-copy="draw"]').click();
-  await expect(page.locator('[data-copy="draw"]')).toHaveText("Copied");
+  await page.locator('#embed-panel [part="copy"]').click();
+  await expect(page.locator("#embed-panel .status")).toContainText(testInfo.project.name.startsWith("webkit") ? /Copied|copy it by hand/ : "Copied");
+});
+
+test("nothing the code section had is gone: Draw it and Turn it, six more ways, four sizes, a picture, Copy, the embed page, the docs and the credit", async ({ page }) => {
+  await page.goto("/?date=2026-07-17&theme=squircle&housing=circle&turn=-8");
+  const panel = page.locator("#embed-panel");
+  await expect(panel.locator('[role="tab"][aria-selected="true"]')).toHaveText("Draw it");
+  await expect(panel.locator('[role="tab"]')).toHaveText(["Draw it", "Turn it", "HTML", "React", "Vue", "Angular", "Svelte", "iframe"]);
+  await expect(panel.locator('[part="size-button"]')).toHaveText(["64", "96", "160", "256"]);
+  await expect(panel.locator('[part="preview"] svg')).toHaveCount(1);
+  await expect(panel.locator('[part="copy"]')).toHaveText("Copy code");
+  await expect(panel.locator('[part="open"]')).toHaveAttribute("href", /^embed\.html\?date=2026-07-17&theme=squircle/);
+  await expect(panel.locator('[part="docs"]')).toHaveAttribute("href", "docs/index.html");
+  await expect(panel.locator('[part="credits"]')).toContainText("Every drawing is our own");
+  await panel.locator('button[data-kind="turn"]').click();
+  await expect(panel.locator('[part="code"]')).toContainText("flipCalendar");
+  await expect(panel.locator('[part="code"]')).toContainText("turn: -8");
+  for (const [kind, needle] of [["html", "cdn.jsdelivr.net/npm/@johnmorrisdotca/koyomi-calendars@"], ["react", "dangerouslySetInnerHTML"], ["vue", "v-html"], ["angular", "bypassSecurityTrustHtml"], ["svelte", "{@html svg}"], ["iframe", "embed.html?date=2026-07-17"]] as const) {
+    await panel.locator(`button[data-kind="${kind}"]`).click();
+    await expect(panel.locator('[part="code"]'), kind).toContainText(needle);
+  }
+  await expect(page).toHaveURL(/embed=iframe/);
+  await panel.locator('button[data-size="256"]').click();
+  await expect(panel.locator('[part="code"]')).toContainText('width="256"');
+  await expect(page).toHaveURL(/size=256/);
 });
 
 test("the month pages: four designs, the week start and the notes follow the choices", async ({ page }) => {

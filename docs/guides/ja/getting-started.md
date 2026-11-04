@@ -100,4 +100,4 @@ await flipCalendar(element, { render: (date) => calendarIcon({ ...date }), from,
 - 月間カレンダー：[月間カレンダー](month-pages.md)。ページめくり：[ページをめくる](turning-the-page.md)
 - 日本の祝日、旧暦、六曜：[日本の暦](japanese-calendar.md)
 - React、Vue、Svelte、Angular、サーバーでの使い方：[フレームワークとサーバー](frameworks.md)
-- 目で試す：[デモ](https://johnmorrisdotca.github.io/koyomi-calendars/ja/)と[ビルダー](https://johnmorrisdotca.github.io/koyomi-calendars/ja/builder.html)
+- 目で試す：[デモ](https://johnmorrisdotca.github.io/koyomi-calendars/ja/)と[ビルダー](https://johnmorrisdotca.github.io/koyomi-calendars/ja/builder.html)。どちらも最後はファミリー共通の「自分のページに入れる」パネルです。ページ用、デザイン1つだけ、サーバー上のファイル、HTML、React、Vue、Angular、Svelte、iframe のコードを、4つの大きさで、横の絵といっしょに見られます

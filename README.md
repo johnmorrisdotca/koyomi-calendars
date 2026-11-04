@@ -27,7 +27,7 @@ const svg = calendarIcon({ theme: "squircle", month: 11, day: 2, year: 2026, sch
 console.log(svg.startsWith("<svg")); // true
 ```
 
-**[Open the demo](https://johnmorrisdotca.github.io/koyomi-calendars/)** ([日本語のデモ](https://johnmorrisdotca.github.io/koyomi-calendars/ja/)): pick a design, a housing, rings and a turn, turn the page back and forward, and copy the code. The [builder](https://johnmorrisdotca.github.io/koyomi-calendars/builder.html) does the same for a whole setup, in a page of its own.
+**[Open the demo](https://johnmorrisdotca.github.io/koyomi-calendars/)** ([日本語のデモ](https://johnmorrisdotca.github.io/koyomi-calendars/ja/)): pick a design, a housing, rings and a turn, turn the page back and forward, and copy the code. The [builder](https://johnmorrisdotca.github.io/koyomi-calendars/builder.html) does the same for a whole setup, in a page of its own. Both have the family's "Put it in your page" panel: the code for a page, one design alone, a file on a server, plain HTML, React, Vue, Angular, Svelte and an iframe, the picture beside it, Copy, the embed page and the docs.
 
 ## Who it is for
 

@@ -2,6 +2,12 @@
 
 ## [Unreleased]
 
+### Changed
+
+- **The demo's "Copy the code" and the builder's code section are kazoku-ui's `<kazoku-embed-panel>`** (kazoku-ui ^0.15.1; MODULES-364). Nothing they had is gone, and tests count it. The demo: "Draw it" and "Turn it" are the first two tabs. The builder: "A page", "One design alone" and "A file on a server" are tabs (a month has "A page" and "A file on a server"), with the four sizes 64, 96, 160 and 256 (they were a row of the builder's own choices; the address key `size` is kept), the choice of tab kept in the address (`format` in the builder, `embed` in the demo), and the same code as before for each. The words "Code for" and the Copy button are the panel's now ("Copy code").
+- **Added by the panel**: the family's other ways a page is made (HTML from a CDN, React, Vue, Angular, Svelte and an iframe of the embed page), the picture made from the same choices beside the code, Open the embed page, Read the docs and the credit line. The code is written by `demo/embed-code.ts`, and `test/embed-code.test.ts` runs the call of every way and checks it draws what the package draws.
+- The demo's code now says `locale: "ja"` on the Japanese page, as the stage already drew. `scripts/check-standard.mjs` is kazoku-ui 0.15's (the `embed-panel` item).
+
 ## [0.2.0] - 2026-11-03
 
 ### Added

@@ -1,9 +1,12 @@
 // The builder page: choose an icon or a month, see it, copy the code. Every choice is kept in the address, so a link opens the same setup.
 import { createAddressState } from "@johnmorrisdotca/kazoku-ui/address-state";
+import "@johnmorrisdotca/kazoku-ui/embed-panel/define";
+import type { EmbedChangeDetail, EmbedPanelElement } from "@johnmorrisdotca/kazoku-ui/embed-panel/element";
 import { CALENDAR_PRESETS, CALENDAR_THEME_LABELS, CALENDAR_THEMES, calendarIcon, calendarPresetOf } from "../src/index.ts";
 import type { CalendarIconOptions, CalendarTheme } from "../src/index.ts";
 import { MONTH_DESIGN_LABELS, MONTH_DESIGNS, monthCalendar } from "../src/month.ts";
 import { PRESET_NAMES, WORDS, type Lang } from "../scripts/words.ts";
+import { embedCode, fileCode, frameCode, iconDraw, iconQuery, monthDraw, monthQuery, frameAddress, type Draw, type IconChoice, type MonthChoice } from "./embed-code.ts";
 
 const lang: Lang = document.documentElement.lang === "ja" ? "ja" : "en";
 const say = WORDS[lang];
@@ -17,7 +20,10 @@ const is = (key: string, ...values: string[]) => values.includes(get(key));
 const today = new Date();
 const date = { year: today.getFullYear(), month: today.getMonth() + 1, day: today.getDate() };
 const turns = [0, -8, 8, -15];
-const sizes = [64, 96, 160, 256];
+const root = lang === "ja" ? "../" : "";
+const panel = $<EmbedPanelElement>("embed-panel");
+const ICON_KINDS = ["module", "alone", "file", "html", "react", "vue", "angular", "svelte", "iframe"];
+const MONTH_KINDS = ["module", "file", "html", "react", "vue", "angular", "svelte", "iframe"];
 
 type Pairs = ReadonlyArray<readonly [string, string]>;
 interface Control { key: string; label: string; items: Pairs; when?: () => boolean; set?: (value: string) => void }
@@ -32,7 +38,6 @@ const iconControls: Control[] = [
   { key: "housing", label: say.housing, items: [["square", say.square], ["circle", say.circle]] },
   { key: "rings", label: say.rings, items: [["0", say.off], ["1", say.on]] },
   { key: "turn", label: say.turn, items: turns.map((t) => [String(t), t === 0 ? "0°" : `${t > 0 ? "+" : "−"}${Math.abs(t)}°`] as const) },
-  { key: "size", label: say.builderSize, items: sizes.map((s) => [String(s), String(s)] as const) },
   { key: "locale", label: say.builderLanguage, items: [["en", say.langEn], ["ja", say.langJa]] },
 ];
 const monthControls: Control[] = [
@@ -81,20 +86,6 @@ function drawWhat(): void {
     return button;
   }));
 }
-function drawFormats(): void {
-  const items: Pairs = is("what", "month") ? [["module", say.fmtModule], ["file", say.fmtFile]] : [["module", say.fmtModule], ["alone", say.fmtAlone], ["file", say.fmtFile]];
-  const chosen = items.some(([value]) => value === get("format")) ? get("format") : "module";
-  $("seg-format").replaceChildren(...items.map(([value, text]) => {
-    const button = document.createElement("button");
-    button.type = "button";
-    button.dataset.value = value;
-    button.textContent = text;
-    button.setAttribute("aria-pressed", String(chosen === value));
-    button.addEventListener("click", () => address.set("format", value));
-    return button;
-  }));
-}
-
 const scheme = (): "light" | "dark" => (get("scheme") === "dark" ? "dark" : "light");
 const theme = (): CalendarTheme => ((CALENDAR_THEMES as readonly string[]).includes(get("theme")) ? (get("theme") as CalendarTheme) : "squircle");
 function iconOptions(): CalendarIconOptions {
@@ -118,41 +109,62 @@ function drawStage(): void {
     : calendarIcon(iconOptions());
 }
 
-function code(): string {
-  if (is("what", "month")) {
-    const lines = [`year: ${date.year}`, `month: ${date.month}`, `design: "${get("design")}"`, ...(get("week") === "monday" ? [`weekStart: "monday"`] : []), ...(get("locale") === "ja" ? [`locale: "ja"`] : []), `scheme: "${scheme()}"`, ...(get("notes") !== "0" ? [`notes: { "${String(date.month).padStart(2, "0")}-07": "Dentist 14:00" }`] : [])];
-    const call = `monthCalendar({ ${lines.join(", ")} })`;
-    const head = `import { monthCalendar } from "@johnmorrisdotca/koyomi-calendars/month";\n\n`;
-    return is("format", "file") ? `${head}import { writeFileSync } from "node:fs";\n\nwriteFileSync("month.svg", ${call});` : `${head}element.innerHTML = ${call};`;
-  }
+const iconChoice = (): IconChoice => {
   const o = iconOptions();
-  const extra = [o.locale ? `locale: "ja"` : "", o.housing ? `housing: "circle"` : "", o.rings ? "rings: true" : "", o.turn ? `turn: ${o.turn}` : "", o.size !== 96 ? `size: ${o.size}` : ""].filter(Boolean);
-  const args = [`month: ${date.month}`, `day: ${date.day}`, `year: ${date.year}`, ...extra, `scheme: "${scheme()}"`];
-  if (is("format", "alone")) return `import { calendarIcon } from "@johnmorrisdotca/koyomi-calendars/themes/${theme()}";\n\nelement.innerHTML = calendarIcon({ ${args.join(", ")} });`;
-  const withTheme = [`theme: "${theme()}"`, ...args].join(", ");
-  if (is("format", "file")) return `import { writeFileSync } from "node:fs";\nimport { calendarIcon } from "@johnmorrisdotca/koyomi-calendars";\n\nwriteFileSync("today.svg", calendarIcon({ ${withTheme} }));`;
-  return `import { calendarIcon } from "@johnmorrisdotca/koyomi-calendars";\n\nelement.innerHTML = calendarIcon({ ${withTheme} });`;
+  return { theme: theme(), ...date, scheme: scheme(), size: o.size ?? 160, ...(o.locale ? { locale: "ja" as const } : {}), ...(o.housing ? { housing: "circle" as const } : {}), ...(o.rings ? { rings: true } : {}), ...(o.turn ? { turn: o.turn } : {}) };
+};
+const monthChoice = (): MonthChoice => ({
+  year: date.year,
+  month: date.month,
+  design: get("design"),
+  scheme: scheme(),
+  ...(get("locale") === "ja" ? { locale: "ja" as const } : {}),
+  ...(get("week") === "monday" ? { monday: true } : {}),
+  ...(get("notes") !== "0" ? { note: { key: `${String(date.month).padStart(2, "0")}-07`, text: "Dentist 14:00" } } : {}),
+});
+const draw = (): Draw => (is("what", "month") ? monthDraw(monthChoice()) : iconDraw(iconChoice(), false));
+
+panel.docsHref = lang === "ja" ? "../docs/ja/index.html" : "docs/index.html";
+panel.labels = { module: say.fmtModule, alone: say.fmtAlone, file: say.fmtFile };
+panel.generate = ({ kind, size, preview }) => {
+  if (kind === "iframe") return frameCode(is("what", "month") ? monthQuery(monthChoice()) : iconQuery(iconChoice(), false), say.title, size, preview, root);
+  if (kind === "file") return fileCode(is("what", "month") ? monthDraw(monthChoice()) : iconDraw(iconChoice(), false));
+  if (kind === "alone") return embedCode("module", iconDraw(iconChoice(), true)) ?? "";
+  return embedCode(kind, draw()) ?? "";
+};
+panel.preview = ({ kind }) => {
+  if (kind === "iframe") return undefined;
+  const box = document.createElement("div");
+  box.style.cssText = `width: ${is("what", "month") ? 320 : panel.size}px; line-height: 0`;
+  box.innerHTML = is("what", "month") ? monthCalendar({ year: date.year, month: date.month, design: get("design") as never, weekStart: get("week") === "monday" ? "monday" : "sunday", locale: get("locale"), scheme: scheme(), size: 320, notes: monthNotes() }) : calendarIcon({ ...iconOptions(), size: panel.size });
+  box.querySelector("svg")?.setAttribute("style", "display: block; width: 100%; height: auto");
+  return box;
+};
+panel.credits = say.credit;
+panel.note = ({ kind }) => (kind === "iframe" && is("what", "month") && get("notes") !== "0" ? say.frameNoNotes : "");
+panel.addEventListener("kazoku-embedchange", (event) => {
+  const { kind, size, reason } = (event as CustomEvent<EmbedChangeDetail>).detail;
+  if (reason === "init") return;
+  address.setMany({ format: kind, size: String(size) });
+});
+
+function drawPanel(): void {
+  const month = is("what", "month");
+  const kinds = month ? MONTH_KINDS : ICON_KINDS;
+  if (panel.kinds.join(" ") !== kinds.join(" ")) panel.kinds = kinds;
+  panel.toggleAttribute("no-size", month);
+  const format = kinds.includes(get("format")) ? get("format") : "module";
+  if (panel.kind !== format) panel.kind = format;
+  if (!month && panel.size !== Number(get("size"))) panel.size = Number(get("size"));
+  panel.openHref = frameAddress(root, month ? monthQuery(monthChoice()) : iconQuery(iconChoice(), false));
+  panel.update();
 }
 
 function everything(): void {
   drawWhat();
   drawChoices();
-  drawFormats();
   drawStage();
-  $("code").textContent = code();
+  drawPanel();
 }
-$("copy").addEventListener("click", async () => {
-  const button = $("copy");
-  try {
-    await navigator.clipboard.writeText($("code").textContent ?? "");
-  } catch {
-    const range = document.createRange();
-    range.selectNodeContents($("code"));
-    getSelection()?.removeAllRanges();
-    getSelection()?.addRange(range);
-  }
-  button.textContent = say.copied;
-  setTimeout(() => (button.textContent = say.copy), 1500);
-});
 address.subscribe(() => everything());
 everything();

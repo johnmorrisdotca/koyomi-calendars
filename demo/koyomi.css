@@ -18,9 +18,7 @@
 .tile .half.dark { background: #1b1d1b; }
 .tile .half svg { max-width: 100%; height: auto; max-height: 92px; }
 .tile .name { font-size: .85rem; font-weight: 600; }
-.code-grid { display: grid; gap: 14px; grid-template-columns: 1fr; }
-@media (min-width: 900px) { .code-grid { grid-template-columns: 1fr 1fr; } }
-.code-head { justify-content: space-between; margin-bottom: 6px; }
+kazoku-embed-panel { --kazoku-ink: var(--ink); --kazoku-surface: var(--surface); --kazoku-line: var(--rule); --kazoku-accent: var(--accent); }
 .months { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px; margin-top: 14px; }
 .months figure { margin: 0; display: grid; gap: 6px; }
 .months figcaption { font-size: .85rem; color: var(--muted); font-weight: 600; }
@@ -28,4 +26,3 @@
 .more .fam-row { margin-bottom: 4px; }
 .more .fam-seg { margin-right: 10px; }
 td code, th code { font-size: .8rem; }
-.code-grid > * { min-width: 0; }

@@ -28,6 +28,6 @@ cpSync("node_modules/@johnmorrisdotca/kazoku-ui/dist", "site/kazoku-ui", { recur
 writeFileSync("site/kazoku-parts.src.js", `import "@johnmorrisdotca/kazoku-ui/language-picker/define";\nimport "@johnmorrisdotca/kazoku-ui/theme-switch/define";\n`);
 await build({ entryPoints: ["site/kazoku-parts.src.js"], outfile: "site/kazoku-parts.js", bundle: true, format: "esm", minify: true, logLevel: "silent", absWorkingDir: process.cwd() });
 rmSync("site/kazoku-parts.src.js");
-await build({ entryPoints: { demo: "demo/demo.ts", builder: "demo/builder.ts", embed: "demo/embed.ts", animate: "src/animate.ts", koyomi: "src/index.ts", month: "src/month.ts" }, outdir: "site", bundle: true, format: "esm", target: "es2022", minify: true, legalComments: "none", logLevel: "warning" });
+await build({ entryPoints: { demo: "demo/demo.ts", builder: "demo/builder.ts", embed: "demo/embed.ts", animate: "src/animate.ts", koyomi: "src/index.ts", month: "src/month.ts" }, outdir: "site", bundle: true, format: "esm", target: "es2022", minify: true, legalComments: "none", logLevel: "warning", define: { __KOYOMI_VERSION__: JSON.stringify(pkg.version) } });
 writeFileSync("site/.nojekyll", "");
 console.log("site/ is ready");

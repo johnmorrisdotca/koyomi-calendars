@@ -25,10 +25,7 @@
 </section>
 <section class="more" aria-labelledby="code-heading">
   <h2 id="code-heading" data-say="codeHeading">{{codeHeading}}</h2>
-  <div class="code-grid">
-    <div><div class="fam-row code-head"><span class="fam-label" data-say="drawCode">{{drawCode}}</span><button type="button" class="fam-button" data-copy="draw" data-say="copy">{{copy}}</button></div><pre><code id="code-draw"></code></pre></div>
-    <div><div class="fam-row code-head"><span class="fam-label" data-say="turnCode">{{turnCode}}</span><button type="button" class="fam-button" data-copy="turn" data-say="copy">{{copy}}</button></div><pre><code id="code-turn"></code></pre></div>
-  </div>
+  <kazoku-embed-panel id="embed-panel" sizes="64 96 160 256" size="96" data-testid="panel"></kazoku-embed-panel>
 </section>
 <section class="more" aria-labelledby="month-heading">
   <h2 id="month-heading" data-say="monthHeading">{{monthHeading}}</h2>

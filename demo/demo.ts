@@ -1,11 +1,14 @@
 // The demo page: a stage where the page turns, the 18 designs, the code to copy, and the month pages. Every choice is kept in the address.
 import { createAddressState } from "@johnmorrisdotca/kazoku-ui/address-state";
+import "@johnmorrisdotca/kazoku-ui/embed-panel/define";
+import type { EmbedChangeDetail, EmbedPanelElement } from "@johnmorrisdotca/kazoku-ui/embed-panel/element";
 import { CALENDAR_FLIP_LABELS, CALENDAR_FLIPS, flipCalendar, nextDay, previousDay } from "../src/animate.ts";
 import type { CalendarFlip, FlipDate } from "../src/animate.ts";
 import { CALENDAR_PRESETS, CALENDAR_THEME_LABELS, CALENDAR_THEMES, calendarIcon, calendarPresetOf } from "../src/index.ts";
 import type { CalendarIconOptions, CalendarTheme } from "../src/index.ts";
 import { MONTH_DESIGN_LABELS, MONTH_DESIGNS, monthCalendar } from "../src/month.ts";
 import { PRESET_NAMES, WORDS, type Lang } from "../scripts/words.ts";
+import { embedCode, frameAddress, frameCode, iconDraw, iconQuery, type IconChoice } from "./embed-code.ts";
 
 const lang: Lang = document.documentElement.lang === "ja" ? "ja" : "en";
 const say = WORDS[lang];
@@ -136,32 +139,49 @@ function drawGallery(): void {
   }));
 }
 
-// ----- the code to copy -----
-function drawCodes(): void {
-  const t = theme();
+// ----- the code to copy: the family's panel, filled with the call that draws the stage -----
+const root = lang === "ja" ? "../" : "";
+const panel = $<EmbedPanelElement>("embed-panel");
+const choice = (size: number): IconChoice => {
+  const l = look();
+  return { theme: theme(), ...shown, scheme: scheme(), size, ...(lang === "ja" ? { locale: "ja" as const } : {}), ...(l.housing ? { housing: l.housing } : {}), ...(l.rings ? { rings: true } : {}), ...(l.turn ? { turn: l.turn } : {}) };
+};
+function turnCode(): string {
   const l = look();
   const extra = [l.housing ? `housing: "circle"` : "", l.rings ? "rings: true" : "", l.turn ? `turn: ${l.turn}` : ""].filter(Boolean);
-  const args = [`month: ${shown.month}`, `day: ${shown.day}`, `year: ${shown.year}`, ...extra, `scheme: "${scheme()}"`].join(", ");
-  $("code-draw").textContent = `import { calendarIcon } from "@johnmorrisdotca/koyomi-calendars/themes/${t}";\n\nelement.innerHTML = calendarIcon({ ${args} });`;
   const to = nextDay(shown);
-  $("code-turn").textContent = `import { flipCalendar, nextDay } from "@johnmorrisdotca/koyomi-calendars/animate";\nimport { calendarIcon } from "@johnmorrisdotca/koyomi-calendars/themes/${t}";\n\nconst from = { year: ${shown.year}, month: ${shown.month}, day: ${shown.day} };\nawait flipCalendar(element, {\n  render: (d) => calendarIcon({ ...d${extra.length ? `, ${extra.join(", ")}` : ""} }),\n  from,\n  to: nextDay(from), // ${iso(to)}\n  animation: "${flip()}",\n});`;
+  return `import { flipCalendar, nextDay } from "@johnmorrisdotca/koyomi-calendars/animate";\nimport { calendarIcon } from "@johnmorrisdotca/koyomi-calendars/themes/${theme()}";\n\nconst from = { year: ${shown.year}, month: ${shown.month}, day: ${shown.day} };\nawait flipCalendar(element, {\n  render: (d) => calendarIcon({ ...d${extra.length ? `, ${extra.join(", ")}` : ""} }),\n  from,\n  to: nextDay(from), // ${iso(to)}\n  animation: "${flip()}",\n});`;
 }
-document.querySelectorAll<HTMLButtonElement>("[data-copy]").forEach((button) => {
-  button.addEventListener("click", async () => {
-    const text = $(`code-${button.dataset.copy}`).textContent ?? "";
-    try {
-      await navigator.clipboard.writeText(text);
-      button.textContent = say.copied;
-    } catch {
-      const range = document.createRange();
-      range.selectNodeContents($(`code-${button.dataset.copy}`));
-      getSelection()?.removeAllRanges();
-      getSelection()?.addRange(range);
-      button.textContent = say.copied;
-    }
-    setTimeout(() => (button.textContent = say.copy), 1500);
-  });
+panel.kinds = ["module", "turn", "html", "react", "vue", "angular", "svelte", "iframe"];
+panel.labels = { module: say.drawCode, turn: say.turnCode };
+panel.docsHref = lang === "ja" ? "../docs/ja/index.html" : "docs/index.html";
+panel.generate = ({ kind, size, preview }) => {
+  if (kind === "turn") return turnCode();
+  if (kind === "iframe") return frameCode(iconQuery(choice(size), true), say.title, size, preview, root);
+  return embedCode(kind, iconDraw(choice(size), true)) ?? "";
+};
+panel.preview = ({ kind, size }) => {
+  if (kind === "iframe") return undefined;
+  const box = document.createElement("div");
+  box.style.cssText = `width: ${size}px; line-height: 0`;
+  box.innerHTML = calendarIcon(options(shown, theme(), { size }));
+  box.querySelector("svg")?.setAttribute("style", "display: block; width: 100%; height: auto");
+  return box;
+};
+panel.credits = say.credit;
+const keptKind = address.get("embed") ?? "";
+panel.kind = panel.kinds.includes(keptKind) ? keptKind : "module";
+if (Number(address.get("size")) > 0) panel.size = Number(address.get("size"));
+panel.addEventListener("kazoku-embedchange", (event) => {
+  const { kind, size, reason } = (event as CustomEvent<EmbedChangeDetail>).detail;
+  if (reason === "init") return;
+  address.set("embed", kind === "module" ? null : kind);
+  address.set("size", size === 96 ? null : String(size));
 });
+function drawCodes(): void {
+  panel.openHref = frameAddress(root, iconQuery(choice(panel.size), true));
+  panel.update();
+}
 
 // ----- the month pages -----
 function drawMonths(): void {
