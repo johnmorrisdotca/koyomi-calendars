@@ -9,6 +9,10 @@ description: What changed in each version that you must act on, how to move from
 
 Koyomi Calendars is in early development (0.x), so a minor version can add to the interface. This page lists only what asks something of you. The complete, dated record is the [changelog](../../CHANGELOG.md).
 
+## To 0.3.0
+
+Nothing asks anything of you: no drawing changed, and no option was added or removed. The demo's "Copy the code" and the builder's code section are now the family's embed panel, so they also write the code for plain HTML, React, Vue, Angular, Svelte and an iframe of the embed page, with the picture beside it.
+
 ## To 0.2.0
 
 Nothing asks anything of you: no drawing changed, and no option was added or removed. Every export now has a documentation page on the [documentation site](https://johnmorrisdotca.github.io/koyomi-calendars/docs/) with a runnable example, there is an embed page for an iframe (`embed.html` on the demo site), and four new guides cover Vite and webpack, a plain page with a CDN, the iframe, and TypeScript and Node. If you read the old docs pages on the demo site (`docs/icons.html` and the others), they are now the guides on the documentation site; the Markdown files are still in the repository.

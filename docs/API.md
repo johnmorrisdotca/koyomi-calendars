@@ -1,6 +1,6 @@
 # @johnmorrisdotca/koyomi-calendars API reference
 
-Every export of @johnmorrisdotca/koyomi-calendars 0.2.0, one section for each entry point, written by `pnpm docs:api` from the built declarations. Do not edit it by hand: `pnpm docs:check` fails when it is out of date. The guides are in [docs/guides](guides/getting-started.md).
+Every export of @johnmorrisdotca/koyomi-calendars 0.3.0, one section for each entry point, written by `pnpm docs:api` from the built declarations. Do not edit it by hand: `pnpm docs:check` fails when it is out of date. The guides are in [docs/guides](guides/getting-started.md).
 
 ## `@johnmorrisdotca/koyomi-calendars`
 
